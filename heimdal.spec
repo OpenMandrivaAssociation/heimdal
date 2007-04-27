@@ -1,6 +1,6 @@
 Name:		heimdal
 Version:	0.8.1
-Release:	%mkrel 1
+Release:	%mkrel 2
 Summary:	Heimdal implementation of Kerberos V5 system
 License:	Free
 Group:		Networking/Other
@@ -171,6 +171,7 @@ Kerberos Daemons.
 Summary:	Header files for heimdal
 Group:		System/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
+Conflicts:  xmlrpc-devel
 
 %description devel
 contains files needed to compile and link software using the kerberos
@@ -219,9 +220,6 @@ install -m 644 %{SOURCE6} %{buildroot}%{_sysconfdir}/xinetd.d/rshd
 install -m 644 %{SOURCE7} %{buildroot}%{_sysconfdir}/xinetd.d/telnetd
 install -m 644 %{SOURCE8} %{buildroot}%{_sysconfdir}/xinetd.d/kadmind
 
-rm -rf	%{buildroot}%{_libdir}/lib{com_err,ss}.so \
-%{buildroot}%{_includedir}/{glob,fnmatch,ss/ss}.h
-
 chmod +r %{buildroot}%{_bindir}/otp   # qrde dlaczego to ma chmod 0
 
 touch %{buildroot}%{_sysconfdir}/%{name}/krb5.keytab
@@ -230,6 +228,11 @@ touch %{buildroot}%{_localstatedir}/%{name}/kadmind.acl
 # prevent some conflicts
 mv %{buildroot}/%{_mandir}/man1/su.1 %{buildroot}/%{_mandir}/man1/ksu.1
 mv %{buildroot}/%{_mandir}/cat1/su.1 %{buildroot}/%{_mandir}/cat1/ksu.1
+
+rm -f %{buildroot}%{_libdir}/lib{com_err,ss}.so
+rm -f %{buildroot}%{_includedir}/{glob,fnmatch,ss/ss}.h
+rm -f %{buildroot}%{_bindir}/mk_cmds
+
 
 %multiarch_binaries %{buildroot}/%{_bindir}/krb5-config
 
