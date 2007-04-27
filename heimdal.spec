@@ -1,6 +1,6 @@
 Name:		heimdal
-Version:	0.7.2
-Release:	%mkrel 5
+Version:	0.8.1
+Release:	%mkrel 1
 Summary:	Heimdal implementation of Kerberos V5 system
 License:	Free
 Group:		Networking/Other
@@ -23,7 +23,6 @@ BuildRequires:	flex
 BuildRequires:	bison
 BuildRequires:	libtool
 BuildRequires:	ncurses-devel >= 5.3
-BuildRequires:	libext2fs-devel
 BuildRoot:	    %{_tmppath}/%{name}-%{version}
 
 %define		_libexecdir	%{_sbindir}
@@ -172,7 +171,6 @@ Kerberos Daemons.
 Summary:	Header files for heimdal
 Group:		System/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
-Requires:	e2fsprogs-devel
 
 %description devel
 contains files needed to compile and link software using the kerberos
@@ -280,28 +278,27 @@ service xinetd condreload
 %config(noreplace) %{_sysconfdir}/xinetd.d/kadmind
 %dir %{_localstatedir}/%{name}
 %config(noreplace) %{_localstatedir}/%{name}/kadmind.acl
+%{_mandir}/man1/kimpersonate.1*
 %{_mandir}/man8/iprop.8*
+%{_mandir}/man8/iprop-log.8*
 %{_mandir}/man8/kstash.8*
 %{_mandir}/man8/hprop.8*
 %{_mandir}/man8/hpropd.8*
-%{_mandir}/man8/ipropd-master.8*
-%{_mandir}/man8/ipropd-slave.8*
 %{_mandir}/man8/kadmind.8*
 %{_mandir}/man8/kdc.8*
 %{_mandir}/man8/kxd.8*
 %{_mandir}/man8/kfd.8*
 %{_mandir}/man8/kpasswdd.8*
-%{_mandir}/cat8/iprop.8*
+%{_mandir}/man8/kcm.8*
 %{_mandir}/cat8/kstash.8*
 %{_mandir}/cat8/hprop.8*
 %{_mandir}/cat8/hpropd.8*
-%{_mandir}/cat8/ipropd-master.8*
-%{_mandir}/cat8/ipropd-slave.8*
 %{_mandir}/cat8/kadmind.8*
 %{_mandir}/cat8/kdc.8*
 %{_mandir}/cat8/kxd.8*
 %{_mandir}/cat8/kfd.8*
 %{_mandir}/cat8/kpasswdd.8*
+%{_mandir}/cat8/kcm.8*
 %{_sbindir}/kstash
 %{_sbindir}/hprop
 %{_sbindir}/hpropd
@@ -312,16 +309,19 @@ service xinetd condreload
 %{_sbindir}/kxd
 %{_sbindir}/kfd
 %{_sbindir}/kpasswdd
-%{_sbindir}/dump_log
-%{_sbindir}/replay_log
-%{_sbindir}/truncate_log
+%{_sbindir}/iprop-log
+%{_sbindir}/kcm
+%{_sbindir}/kdigest
+%{_sbindir}/kimpersonate
 
 %files libs
 %defattr(-,root,root)
 %dir %{_sysconfdir}/%{name}
 %attr(400,root,root) %ghost %{_sysconfdir}/%{name}/krb5.keytab
 %{_libdir}/lib*.so.*
+%{_libdir}/windc*.so.*
 %{_infodir}/heimdal.info*
+%{_infodir}/hx509.info.*
 %{_mandir}/man8/kerberos.8*
 %{_mandir}/cat8/kerberos.8*
 
@@ -395,6 +395,9 @@ service xinetd condreload
 %{_bindir}/klist
 %{_bindir}/kpasswd
 %{_bindir}/pagsh
+%{_bindir}/compile_et
+%{_bindir}/gss
+%{_bindir}/hxtool
 %attr(4755,root,root) %{_bindir}/otp
 %attr(4755,root,root) %{_bindir}/su
 %attr(4755,root,root) %{_bindir}/ksu
@@ -421,10 +424,7 @@ service xinetd condreload
 %{_mandir}/cat1/afslog.1*
 %{_mandir}/cat1/ksu.1*
 %{_mandir}/cat1/kauth.1*
-%{_mandir}/cat1/kdestroy.1*
-%{_mandir}/cat1/kgetcred.1*
 %{_mandir}/cat1/kinit.1*
-%{_mandir}/cat1/klist.1*
 %{_mandir}/cat1/kpasswd.1*
 %{_mandir}/cat1/pagsh.1*
 %{_mandir}/cat1/otp.1*
@@ -442,7 +442,6 @@ service xinetd condreload
 %{_mandir}/man8/string2key.8*
 %{_mandir}/man8/kadmin.8*
 %{_mandir}/man8/ktutil.8*
-%{_mandir}/cat8/verify_krb5_conf.8*
 %{_mandir}/cat8/string2key.8*
 %{_mandir}/cat8/kadmin.8*
 %{_mandir}/cat8/ktutil.8*
@@ -463,10 +462,10 @@ service xinetd condreload
 %{_bindir}/mk_cmds
 %{_libdir}/lib*.la
 %{_libdir}/lib*.so
+%{_libdir}/windc.la
+%{_libdir}/windc.so
 %{_includedir}/*
 %{_mandir}/man1/krb5-config.1*
 %{_mandir}/cat1/krb5-config.1*
 %{_mandir}/man3/*
 %{_mandir}/cat3/*
-
-
