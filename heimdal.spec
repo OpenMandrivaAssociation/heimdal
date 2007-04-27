@@ -462,7 +462,6 @@ service xinetd condreload
 %defattr(-,root,root)
 %_bindir/krb5-config
 %multiarch_bindir/krb5-config
-%{_bindir}/mk_cmds
 %{_libdir}/lib*.la
 %{_libdir}/lib*.so
 %{_libdir}/windc.la
