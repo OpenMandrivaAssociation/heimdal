@@ -1,6 +1,6 @@
 Name:		heimdal
 Version:	0.8.1
-Release:	%mkrel 3
+Release:	%mkrel 4
 Summary:	Heimdal implementation of Kerberos V5 system
 License:	Free
 Group:		Networking/Other
@@ -173,6 +173,8 @@ Summary:	Header files for heimdal
 Group:		System/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 Conflicts:  xmlrpc-devel
+Conflicts:  krb5-devel
+Conflicts:  gssapi-devel
 
 %description devel
 contains files needed to compile and link software using the kerberos
