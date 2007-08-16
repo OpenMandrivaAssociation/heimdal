@@ -1,10 +1,10 @@
 Name:		heimdal
-Version:	0.8.1
-Release:	%mkrel 4
+Version:	1.0.1
+Release:	%mkrel 1
 Summary:	Heimdal implementation of Kerberos V5 system
 License:	Free
 Group:		Networking/Other
-Source0:	ftp://ftp.pdc.kth.se/pub/heimdal/src/%{name}-%{version}.tar.bz2
+Source0:	ftp://ftp.pdc.kth.se/pub/heimdal/src/%{name}-%{version}.tar.gz
 Source1:	%{name}.init
 #FIXME
 #Source2:	%{name}.logrotate
@@ -24,6 +24,8 @@ BuildRequires:	bison
 BuildRequires:	libtool
 BuildRequires:	ncurses-devel >= 5.3
 BuildRequires:	openldap-devel >= 2.0
+BuildRequires:	readline-devel termcap-devel
+BuildRequires:	pam-devel
 BuildRoot:	    %{_tmppath}/%{name}-%{version}
 
 %define		_libexecdir	%{_sbindir}
@@ -64,6 +66,18 @@ Conflicts:  krb5-server
 %description server
 This package contains the master KDC.
 
+# Not working right yet
+%if 0
+%package hdb_ldap
+Summary:	Kerberos Server LDAP Backend
+Group:		System/Servers
+Requires:	%{name}-server = %{version}-%{release}
+
+%description hdb_ldap
+This package contains the LDAP HDB backend plugin, which allows the use of
+an LDAP server for storing the Heimdal database.
+%endif
+
 %package libs
 Summary:	Heimdal shared libraries
 Group:		System/Libraries
@@ -77,6 +91,7 @@ Summary:	login is used when signing onto a system
 Group:		Networking/Other
 Requires:	%{name}-libs = %{version}-%{release}
 Provides:	login
+Conflicts:	util-linux shadow-utils
 
 %description login
 login is used when signing onto a system. It can also be used to
@@ -88,6 +103,7 @@ contain kerberized version login program.
 Summary:	The standard UNIX FTP (file transfer protocol) client
 Group:		Networking/Other
 Requires:	%{name}-libs = %{version}-%{release}
+Conflicts:	ftp-client-krb5
 
 %description ftp
 The ftp package provides the standard UNIX command-line FTP client
@@ -111,6 +127,7 @@ needed for all of these services.
 Summary:	Client for the telnet remote login
 Group:		Networking/Other
 Requires:	%{name}-libs = %{version}-%{release}
+Conflicts:	telnet-client-krb5
 
 %description telnet
 Telnet is a popular protocol for remote logins across the Internet.
@@ -194,10 +211,13 @@ autoconf
 	--enable-new-des3-code \
 	--enable-shared \
 	--with-readline \
-    --with-readline-lib=%{_libdir} \
-    --with-readline-include=%{_includedir}/readline \
+	--with-readline-lib=%{_libdir} \
+	--with-readline-include=%{_includedir}/readline \
 	--with-x \
 	--with-ipv6 \
+%if 0
+	--enable-hdb-openldap-module \
+%endif
 	--with-openldap=%{_prefix}
 %{__make}
 
@@ -284,9 +304,9 @@ service xinetd condreload
 %config(noreplace) %{_sysconfdir}/xinetd.d/kadmind
 %dir %{_localstatedir}/%{name}
 %config(noreplace) %{_localstatedir}/%{name}/kadmind.acl
-%{_mandir}/man1/kimpersonate.1*
-%{_mandir}/man8/iprop.8*
-%{_mandir}/man8/iprop-log.8*
+%{_mandir}/*1/kimpersonate.1*
+%{_mandir}/*8/iprop.8*
+%{_mandir}/*8/iprop-log.8*
 %{_mandir}/man8/kstash.8*
 %{_mandir}/man8/hprop.8*
 %{_mandir}/man8/hpropd.8*
@@ -296,6 +316,7 @@ service xinetd condreload
 %{_mandir}/man8/kfd.8*
 %{_mandir}/man8/kpasswdd.8*
 %{_mandir}/man8/kcm.8*
+%{_mandir}/*8/ipropd-*.8*
 %{_mandir}/cat8/kstash.8*
 %{_mandir}/cat8/hprop.8*
 %{_mandir}/cat8/hpropd.8*
@@ -319,6 +340,11 @@ service xinetd condreload
 %{_sbindir}/kcm
 %{_sbindir}/kdigest
 %{_sbindir}/kimpersonate
+
+%if 0
+%files hdb_ldap
+%{_libdir}/hdb_ldap*
+%endif
 
 %files libs
 %defattr(-,root,root)
@@ -362,8 +388,8 @@ service xinetd condreload
 %defattr(-,root,root)
 %config(noreplace) %{_sysconfdir}/xinetd.d/ftpd
 %{_sbindir}/ftpd
-%{_mandir}/man5/ftpusers.5*
-%{_mandir}/cat5/ftpusers.5*
+%exclude %{_mandir}/man5/ftpusers.5*
+%exclude %{_mandir}/cat5/ftpusers.5*
 %{_mandir}/man8/ftpd.8*
 %{_mandir}/cat8/ftpd.8*
 
@@ -412,10 +438,10 @@ service xinetd condreload
 %{_mandir}/man1/afslog.1*
 %{_mandir}/man1/ksu.1*
 %{_mandir}/man1/kauth.1*
-%{_mandir}/man1/kdestroy.1*
-%{_mandir}/man1/kgetcred.1*
+%{_mandir}/*1/kdestroy.1*
+%{_mandir}/*1/kgetcred.1*
 %{_mandir}/man1/kinit.1*
-%{_mandir}/man1/klist.1*
+%{_mandir}/*1/klist.1*
 %{_mandir}/man1/kpasswd.1*
 %{_mandir}/man1/pagsh.1*
 %{_mandir}/man1/otp.1*
@@ -444,7 +470,7 @@ service xinetd condreload
 %{_mandir}/cat1/xnlock.1*
 %{_mandir}/man5/krb5.conf.5*
 %{_mandir}/cat5/krb5.conf.5*
-%{_mandir}/man8/verify_krb5_conf.8*
+%{_mandir}/*8/verify_krb5_conf.8*
 %{_mandir}/man8/string2key.8*
 %{_mandir}/man8/kadmin.8*
 %{_mandir}/man8/ktutil.8*
