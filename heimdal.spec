@@ -59,8 +59,8 @@ This package contains Kerberos 5 programs for use on workstations.
 Summary:	Kerberos Server
 Group:		System/Servers
 Requires:	%{name}-libs = %{version}-%{release}
-Requires(post):	/sbin/chkconfig
-Requires(preun):/sbin/chkconfig
+Requires(post):	chkconfig
+Requires(preun):chkconfig
 Conflicts:  krb5-server
 
 %description server
