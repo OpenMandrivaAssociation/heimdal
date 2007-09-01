@@ -189,7 +189,7 @@ Kerberos Daemons.
 Summary:	Header files for heimdal
 Group:		System/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
-Conflicts:  xmlrpc-devel
+Conflicts:  libxmlrpc-devel
 Conflicts:  krb5-devel
 Conflicts:  gssapi-devel
 
