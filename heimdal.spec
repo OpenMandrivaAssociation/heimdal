@@ -1,6 +1,6 @@
 Name:		heimdal
 Version:	1.0.1
-Release:	%mkrel 2
+Release:	%mkrel 3
 Summary:	Heimdal implementation of Kerberos V5 system
 License:	Free
 Group:		Networking/Other
@@ -26,6 +26,7 @@ BuildRequires:	ncurses-devel >= 5.3
 BuildRequires:	openldap-devel >= 2.0
 BuildRequires:	readline-devel termcap-devel
 BuildRequires:	pam-devel
+BuildRequires:	e2fsprogs-devel
 BuildRoot:	    %{_tmppath}/%{name}-%{version}
 
 %define		_libexecdir	%{_sbindir}
@@ -427,7 +428,6 @@ service xinetd condreload
 %{_bindir}/klist
 %{_bindir}/kpasswd
 %{_bindir}/pagsh
-%{_bindir}/compile_et
 %{_bindir}/gss
 %{_bindir}/hxtool
 %attr(4755,root,root) %{_bindir}/otp
