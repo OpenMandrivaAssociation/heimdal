@@ -365,7 +365,7 @@ service xinetd condreload
 %{_sbindir}/kcm
 %{_sbindir}/kdigest
 %{_sbindir}/kimpersonate
-%doc doc/*.html
+%doc doc/*.html lib/hdb/hdb.schema
 
 %if 0
 %files hdb_ldap
