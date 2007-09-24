@@ -1,6 +1,6 @@
 Name:		heimdal
 Version:	1.0.1
-Release:	%mkrel 3
+Release:	%mkrel 4
 Summary:	Heimdal implementation of Kerberos V5 system
 License:	Free
 Group:		Networking/Other
@@ -8,17 +8,19 @@ Source0:	ftp://ftp.pdc.kth.se/pub/heimdal/src/%{name}-%{version}.tar.gz
 Source1:	%{name}.init
 #FIXME
 #Source2:	%{name}.logrotate
-#Source3:	%{name}.sysconfig
+Source3:	%{name}.sysconfig
 #Source4:	%{name}-krb5.conf
 Source5:	%{name}-ftpd.xinetd
 Source6:	%{name}-rshd.xinetd
 Source7:	%{name}-telnetd.xinetd
 Source8:    %{name}-kadmind.xinetd
+Source9:	heimdal-1.0-branch-missing-files.tar.gz
 Patch7:		heimdal-0.6.3-fix-readline-detection.patch
 Patch8:		heimdal-0.7.2-fix-database-location.patch
+Patch9:		heimdal-1.0-fix-ldap-test-data.patch
 URL:		http://www.pdc.kth.se/heimdal/
 BuildRequires:	XFree86-devel
-BuildRequires:	db-devel >= 4.1.25
+BuildRequires:	db-devel >= 4.2.52
 BuildRequires:	flex
 BuildRequires:	bison
 BuildRequires:	libtool
@@ -27,9 +29,14 @@ BuildRequires:	openldap-devel >= 2.0
 BuildRequires:	readline-devel termcap-devel
 BuildRequires:	pam-devel
 BuildRequires:	e2fsprogs-devel
+#Required for tests/ldap
+BuildRequires:	openldap-servers
 BuildRoot:	    %{_tmppath}/%{name}-%{version}
 
 %define		_libexecdir	%{_sbindir}
+%if %mdkversion <= 200900
+%define _libdir %{_prefix}/%{_lib}/%{name}
+%endif
 %define _fortify_cflags %nil
 
 %description
@@ -60,6 +67,10 @@ This package contains Kerberos 5 programs for use on workstations.
 Summary:	Kerberos Server
 Group:		System/Servers
 Requires:	%{name}-libs = %{version}-%{release}
+# krb5 package ships krb5.conf etc on mdv 2008.0 and later
+%if %mdkversion >= 200800
+Requires:	krb5
+%endif
 Requires(post):	chkconfig
 Requires(preun):chkconfig
 Conflicts:  krb5-server
@@ -192,21 +203,24 @@ Group:		System/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 Conflicts:  libxmlrpc-devel
 Conflicts:  krb5-devel
+%if %mdkversion < 200800
 Conflicts:  gssapi-devel
+%endif
 
 %description devel
 contains files needed to compile and link software using the kerberos
 libraries.
 
 %prep
-%setup -q
+%setup -q -a 9
 %patch7 -p1 -b .readline
 %patch8 -p1 -b .database
+%patch9 -p1 -b .ldaptests
 autoconf
 
 %build
+#	--sysconfdir=%{_sysconfdir}/%{name} \
 %configure2_5x \
-	--sysconfdir=%{_sysconfdir}/%{name} \
 	--localstatedir=%{_localstatedir}/%{name} \
 	--disable-static \
 	--enable-new-des3-code \
@@ -216,37 +230,39 @@ autoconf
 	--with-readline-include=%{_includedir}/readline \
 	--with-x \
 	--with-ipv6 \
+	--enable-kcm \
 %if 0
 	--enable-hdb-openldap-module \
 %endif
 	--with-openldap=%{_prefix}
-%{__make}
+%make
+%make -C doc html
 
 %install
+export DONT_GPRINTIFY=1
 rm -rf %{buildroot}
 install -d %{buildroot}%{_localstatedir}/%{name}
-install -d %{buildroot}%{_sysconfdir}/%{name}
-install -d %{buildroot}%{_sysconfdir}/xinetd.d
-install -d %{buildroot}%{_sysconfdir}/logrotate.d
-install -d %{buildroot}%{_initrddir}
+#install -d %{buildroot}%{_sysconfdir}/%{name}
 
 %makeinstall_std
 
 install appl/su/.libs/su %{buildroot}%{_bindir}/ksu
 #install %{SOURCE4} %{buildroot}%{_sysconfdir}/krb5.conf
 
-install -m 755 %{SOURCE1} %{buildroot}%{_initrddir}/%{name}
+install -D -m 755 %{SOURCE1} %{buildroot}%{_initrddir}/%{name}
+install -D -m 755 %{SOURCE3} %{buildroot}%{_sysconfdir}/sysconfig/%{name}
 # FIXME install %{SOURCE2} %{buildroot}/etc/logrotate.d/%{name}
 # FIXME install %{SOURCE3} %{buildroot}/etc/sysconfig/%{name}
 
-install -m 644 %{SOURCE5} %{buildroot}%{_sysconfdir}/xinetd.d/ftpd
+install -D -m 644 %{SOURCE5} %{buildroot}%{_sysconfdir}/xinetd.d/ftpd
 install -m 644 %{SOURCE6} %{buildroot}%{_sysconfdir}/xinetd.d/rshd
 install -m 644 %{SOURCE7} %{buildroot}%{_sysconfdir}/xinetd.d/telnetd
 install -m 644 %{SOURCE8} %{buildroot}%{_sysconfdir}/xinetd.d/kadmind
 
 chmod +r %{buildroot}%{_bindir}/otp   # qrde dlaczego to ma chmod 0
 
-touch %{buildroot}%{_sysconfdir}/%{name}/krb5.keytab
+#touch %{buildroot}%{_sysconfdir}/%{name}/krb5.keytab
+touch %{buildroot}%{_sysconfdir}/krb5.keytab
 touch %{buildroot}%{_localstatedir}/%{name}/kadmind.acl
 
 # prevent some conflicts
@@ -259,6 +275,13 @@ rm -f %{buildroot}%{_bindir}/mk_cmds
 
 
 %multiarch_binaries %{buildroot}/%{_bindir}/krb5-config
+
+%check
+%if %{?!_without_test:1}%{?_without_test:0}
+# For some reason this check fails partially just under rpm:
+perl -pi -e 's/check-iprop //g' tests/kdc/Makefile
+make -C tests check
+%endif
 
 %clean
 rm -rf %{buildroot}
@@ -302,6 +325,7 @@ service xinetd condreload
 %defattr(-,root,root)
 %doc NEWS TODO
 %{_initrddir}/%{name}
+%{_sysconfdir}/sysconfig/%{name}
 %config(noreplace) %{_sysconfdir}/xinetd.d/kadmind
 %dir %{_localstatedir}/%{name}
 %config(noreplace) %{_localstatedir}/%{name}/kadmind.acl
@@ -341,6 +365,7 @@ service xinetd condreload
 %{_sbindir}/kcm
 %{_sbindir}/kdigest
 %{_sbindir}/kimpersonate
+%doc doc/*.html
 
 %if 0
 %files hdb_ldap
@@ -349,8 +374,9 @@ service xinetd condreload
 
 %files libs
 %defattr(-,root,root)
-%dir %{_sysconfdir}/%{name}
-%attr(400,root,root) %ghost %{_sysconfdir}/%{name}/krb5.keytab
+#%dir %{_sysconfdir}/%{name}
+#attr(400,root,root) %ghost %{_sysconfdir}/%{name}/krb5.keytab
+%attr(400,root,root) %ghost %{_sysconfdir}/krb5.keytab
 %{_libdir}/lib*.so.*
 %{_libdir}/windc*.so.*
 %{_infodir}/heimdal.info*
