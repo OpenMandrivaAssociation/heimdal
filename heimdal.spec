@@ -93,6 +93,9 @@ an LDAP server for storing the Heimdal database.
 %package libs
 Summary:	Heimdal shared libraries
 Group:		System/Libraries
+%if %mdkversion >= 200800
+Conflicts:	%{_lib}gssapi2
+%endif
 
 %description libs
 This package contains shared libraries required by several of the other heimdal
