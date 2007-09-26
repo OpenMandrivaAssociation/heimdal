@@ -29,6 +29,7 @@ BuildRequires:	openldap-devel >= 2.0
 BuildRequires:	readline-devel termcap-devel
 BuildRequires:	pam-devel
 BuildRequires:	e2fsprogs-devel
+BuildRequires:	texinfo
 #Required for tests/ldap
 BuildRequires:	openldap-servers
 BuildRoot:	    %{_tmppath}/%{name}-%{version}
