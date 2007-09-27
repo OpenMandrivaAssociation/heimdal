@@ -281,7 +281,7 @@ rm -f %{buildroot}%{_bindir}/mk_cmds
 %multiarch_binaries %{buildroot}/%{_bindir}/krb5-config
 
 %check
-%if %{!_with_test:1}%{!?_with_test:0}
+%if %{?_with_test:1}%{!?_with_test:0}
 # For some reason this check fails partially just under rpm:
 perl -pi -e 's/check-iprop //g' tests/kdc/Makefile
 make -C tests check
