@@ -1,6 +1,6 @@
 Name:		heimdal
 Version:	1.0.1
-Release:	%mkrel 4
+Release:	%mkrel 5
 Summary:	Heimdal implementation of Kerberos V5 system
 License:	Free
 Group:		Networking/Other
@@ -35,6 +35,7 @@ BuildRequires:	openldap-servers
 BuildRoot:	    %{_tmppath}/%{name}-%{version}
 
 %define		_libexecdir	%{_sbindir}
+%define		_includedir	%{_prefix}/include/heimdal
 %if %mdkversion <= 200900
 %define _libdir %{_prefix}/%{_lib}/%{name}
 %endif
@@ -206,7 +207,7 @@ Summary:	Header files for heimdal
 Group:		System/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 Conflicts:  libxmlrpc-devel
-Conflicts:  krb5-devel
+#Conflicts:  krb5-devel
 %if %mdkversion < 200800
 Conflicts:  gssapi-devel
 %endif
@@ -214,6 +215,14 @@ Conflicts:  gssapi-devel
 %description devel
 contains files needed to compile and link software using the kerberos
 libraries.
+
+%package devel-doc
+Summary:	Developer documentation for heimdal
+Group:		System/Libraries
+Conflicts:	heimdal-devel <= 1.0.1-4
+
+%description devel-doc
+Contains the documentation covering functions etc. in the heimdal libraries
 
 %prep
 %setup -q -a 9
@@ -277,8 +286,9 @@ rm -f %{buildroot}%{_libdir}/lib{com_err,ss}.so
 rm -f %{buildroot}%{_includedir}/{glob,fnmatch,ss/ss}.h
 rm -f %{buildroot}%{_bindir}/mk_cmds
 
-
-%multiarch_binaries %{buildroot}/%{_bindir}/krb5-config
+# see if we can avoid conflicting with krb5-devel
+mv %{buildroot}/%{_bindir}/krb5-config %{buildroot}/%{_bindir}/heimdal-config
+%multiarch_binaries %{buildroot}/%{_bindir}/heimdal-config
 
 %check
 %if %{?_with_test:1}%{!?_with_test:0}
@@ -519,13 +529,17 @@ service xinetd condreload
 
 %files devel
 %defattr(-,root,root)
-%_bindir/krb5-config
-%multiarch_bindir/krb5-config
+%_bindir/heimdal-config
+%multiarch_bindir/heimdal-config
 %{_libdir}/lib*.la
 %{_libdir}/lib*.so
 %{_libdir}/windc.la
 %{_libdir}/windc.so
 %{_includedir}/*
+
+
+%files devel-doc
+%defattr(-,root,root)
 %{_mandir}/man1/krb5-config.1*
 %{_mandir}/cat1/krb5-config.1*
 %{_mandir}/man3/*
