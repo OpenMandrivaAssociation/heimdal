@@ -19,7 +19,7 @@ Patch7:		heimdal-0.6.3-fix-readline-detection.patch
 Patch8:		heimdal-0.7.2-fix-database-location.patch
 Patch9:		heimdal-1.0-fix-ldap-test-data.patch
 URL:		http://www.pdc.kth.se/heimdal/
-BuildRequires:	XFree86-devel
+BuildRequires:	X11-devel
 BuildRequires:	db-devel >= 4.2.52
 BuildRequires:	flex
 BuildRequires:	bison
