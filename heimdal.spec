@@ -1,12 +1,10 @@
-%define beta RC6
-
 Name:		heimdal
 Version:	1.0.2
-Release:	%mkrel 0.%{beta}.1
+Release:	%mkrel 1
 Summary:	Heimdal implementation of Kerberos V5 system
 License:	Free
 Group:		Networking/Other
-Source0:	ftp://ftp.pdc.kth.se/pub/heimdal/src/%{name}-%{version}%{beta}.tar.gz
+Source0:	ftp://ftp.pdc.kth.se/pub/heimdal/src/%{name}-%{version}.tar.gz
 Source1:	%{name}.init
 #FIXME
 #Source2:	%{name}.logrotate
@@ -227,7 +225,7 @@ Conflicts:	heimdal-devel <= 1.0.1-4
 Contains the documentation covering functions etc. in the heimdal libraries
 
 %prep
-%setup -q -a 9 -n %{name}-%{version}%{beta}
+%setup -q -a 9
 %patch7 -p1 -b .readline
 %patch8 -p1 -b .database
 %patch9 -p1 -b .ldaptests
