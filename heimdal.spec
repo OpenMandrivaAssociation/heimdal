@@ -32,6 +32,7 @@ BuildRequires:	e2fsprogs-devel
 BuildRequires:	texinfo
 #Required for tests/ldap
 BuildRequires:	openldap-servers
+BuildRoot:	    %{_tmppath}/%{name}-%{version}
 
 %define		_libexecdir	%{_sbindir}
 %define		_includedir	%{_prefix}/include/heimdal
