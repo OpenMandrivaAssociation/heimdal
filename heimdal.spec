@@ -1,6 +1,6 @@
 Name:		heimdal
-Version:	1.0.2
-Release:	%mkrel 2
+Version:	1.1
+Release:	%mkrel 1
 Summary:	Heimdal implementation of Kerberos V5 system
 License:	Free
 Group:		Networking/Other
@@ -16,8 +16,6 @@ Source7:	%{name}-telnetd.xinetd
 Source8:    %{name}-kadmind.xinetd
 Source9:	heimdal-1.0-branch-missing-files.tar.gz
 Patch7:		heimdal-0.6.3-fix-readline-detection.patch
-Patch8:		heimdal-0.7.2-fix-database-location.patch
-Patch9:		heimdal-1.0-fix-ldap-test-data.patch
 URL:		http://www.pdc.kth.se/heimdal/
 BuildRequires:	X11-devel
 BuildRequires:	db-devel >= 4.2.52
@@ -36,7 +34,7 @@ BuildRoot:	    %{_tmppath}/%{name}-%{version}
 
 %define		_libexecdir	%{_sbindir}
 %define		_includedir	%{_prefix}/include/heimdal
-%if %mdkversion <= 200900
+%if %mdkversion <= 200710
 %define _libdir %{_prefix}/%{_lib}/%{name}
 %endif
 %define _fortify_cflags %nil
@@ -225,13 +223,13 @@ Conflicts:	heimdal-devel <= 1.0.1-4
 Contains the documentation covering functions etc. in the heimdal libraries
 
 %prep
-%setup -q -a 9
+%setup -q
+#%setup -q -a 9
 %patch7 -p1 -b .readline
-%patch8 -p1 -b .database
-%patch9 -p1 -b .ldaptests
 autoconf
 
 %build
+%serverbuild
 #	--sysconfdir=%{_sysconfdir}/%{name} \
 %configure2_5x \
 	--localstatedir=%{_localstatedir}/%{name} \
@@ -418,6 +416,8 @@ service xinetd condreload
 %{_bindir}/rcp
 %{_mandir}/man1/rsh.1*
 %{_mandir}/cat1/rsh.1*
+%{_mandir}/man1/rcp.1*
+%{_mandir}/cat1/rcp.1*
 
 %files telnet
 %defattr(-,root,root)
@@ -509,6 +509,7 @@ service xinetd condreload
 %{_mandir}/cat1/tenletxr.1*
 %{_mandir}/cat1/xnlock.1*
 %{_mandir}/man5/krb5.conf.5*
+%{_mandir}/man5/mech.5*
 %{_mandir}/cat5/krb5.conf.5*
 %{_mandir}/*8/verify_krb5_conf.8*
 %{_mandir}/man8/string2key.8*
@@ -536,7 +537,7 @@ service xinetd condreload
 %{_libdir}/windc.la
 %{_libdir}/windc.so
 %{_includedir}/*
-
+%{_libdir}/pkgconfig/heimdal-gssapi.pc
 
 %files devel-doc
 %defattr(-,root,root)
