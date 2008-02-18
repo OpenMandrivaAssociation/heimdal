@@ -102,7 +102,7 @@ This package contains shared libraries required by several of the other heimdal
 packages.
 
 %package login
-Summary:	Login is used when signing onto a system
+Summary:	Used when signing onto a system
 Group:		Networking/Other
 Requires:	%{name}-libs = %{version}-%{release}
 Provides:	login
