@@ -1,6 +1,6 @@
 Name:		heimdal
 Version:	1.1
-Release:	%mkrel 2
+Release:	%mkrel 3
 Summary:	Heimdal implementation of Kerberos V5 system
 License:	Free
 Group:		Networking/Other
@@ -15,7 +15,8 @@ Source6:	%{name}-rshd.xinetd
 Source7:	%{name}-telnetd.xinetd
 Source8:    %{name}-kadmind.xinetd
 Source9:	heimdal-1.0-branch-missing-files.tar.gz
-Patch7:		heimdal-0.6.3-fix-readline-detection.patch
+Patch7:		heimdal-1.1-fix-readline-detection.patch
+Patch8:		heimdal-1.1-no-editline.patch
 URL:		http://www.pdc.kth.se/heimdal/
 BuildRequires:	X11-devel
 BuildRequires:	db-devel >= 4.2.52
@@ -32,8 +33,6 @@ BuildRequires:	texinfo
 BuildRequires:	openldap-servers
 BuildRoot:	    %{_tmppath}/%{name}-%{version}
 
-%define		_libexecdir	%{_sbindir}
-%define		_includedir	%{_prefix}/include/heimdal
 %if %mdkversion <= 200710
 %define _libdir %{_prefix}/%{_lib}/%{name}
 %endif
@@ -226,12 +225,15 @@ Contains the documentation covering functions etc. in the heimdal libraries
 %setup -q
 #%setup -q -a 9
 %patch7 -p1 -b .readline
-autoconf
+%patch8 -p1 -b .editline
+autoreconf
 
 %build
 %serverbuild
 #	--sysconfdir=%{_sysconfdir}/%{name} \
 %configure2_5x \
+    --libexecdir=%{_sbindir} \
+    --includedir=%{_includedir}/heimdal \
 	--localstatedir=%{_localstatedir}/%{name} \
 	--disable-static \
 	--enable-new-des3-code \
@@ -536,7 +538,7 @@ service xinetd condreload
 %{_libdir}/lib*.so
 %{_libdir}/windc.la
 %{_libdir}/windc.so
-%{_includedir}/*
+%{_includedir}/heimdal
 %{_libdir}/pkgconfig/heimdal-gssapi.pc
 
 %files devel-doc
