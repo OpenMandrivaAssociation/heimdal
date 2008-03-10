@@ -1,8 +1,8 @@
 Name:		heimdal
 Version:	1.1
-Release:	%mkrel 3
+Release:	%mkrel 4
 Summary:	Heimdal implementation of Kerberos V5 system
-License:	Free
+License:	BSD-like
 Group:		Networking/Other
 Source0:	ftp://ftp.pdc.kth.se/pub/heimdal/src/%{name}-%{version}.tar.gz
 Source1:	%{name}.init
@@ -204,7 +204,7 @@ Summary:	Header files for heimdal
 Group:		System/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 Conflicts:  libxmlrpc-devel
-#Conflicts:  krb5-devel
+Conflicts:  krb5-devel
 %if %mdkversion < 200800
 Conflicts:  gssapi-devel
 %endif
@@ -233,7 +233,6 @@ autoreconf
 #	--sysconfdir=%{_sysconfdir}/%{name} \
 %configure2_5x \
     --libexecdir=%{_sbindir} \
-    --includedir=%{_includedir}/heimdal \
 	--localstatedir=%{_localstatedir}/%{name} \
 	--disable-static \
 	--enable-new-des3-code \
@@ -538,7 +537,7 @@ service xinetd condreload
 %{_libdir}/lib*.so
 %{_libdir}/windc.la
 %{_libdir}/windc.so
-%{_includedir}/heimdal
+%{_includedir}/*
 %{_libdir}/pkgconfig/heimdal-gssapi.pc
 
 %files devel-doc
