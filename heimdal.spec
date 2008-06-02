@@ -233,7 +233,7 @@ autoreconf
 #	--sysconfdir=%{_sysconfdir}/%{name} \
 %configure2_5x \
     --libexecdir=%{_sbindir} \
-	--localstatedir=%{_localstatedir}/%{name} \
+	--localstatedir=%{_localstatedir}/lib/%{name} \
 	--disable-static \
 	--enable-new-des3-code \
 	--enable-shared \
@@ -253,7 +253,7 @@ autoreconf
 %install
 export DONT_GPRINTIFY=1
 rm -rf %{buildroot}
-install -d %{buildroot}%{_localstatedir}/%{name}
+install -d %{buildroot}%{_localstatedir}/lib/%{name}
 #install -d %{buildroot}%{_sysconfdir}/%{name}
 
 %makeinstall_std
@@ -275,7 +275,7 @@ chmod +r %{buildroot}%{_bindir}/otp   # qrde dlaczego to ma chmod 0
 
 #touch %{buildroot}%{_sysconfdir}/%{name}/krb5.keytab
 touch %{buildroot}%{_sysconfdir}/krb5.keytab
-touch %{buildroot}%{_localstatedir}/%{name}/kadmind.acl
+touch %{buildroot}%{_localstatedir}/lib/%{name}/kadmind.acl
 
 # prevent some conflicts
 mv %{buildroot}/%{_mandir}/man1/su.1 %{buildroot}/%{_mandir}/man1/ksu.1
@@ -301,7 +301,7 @@ rm -rf %{buildroot}
 
 %pre server
 if [ -d %{_var}/%{name} ]; then
-    mv %{_var}/%{name} %{_localstatedir}/%{name}
+    mv %{_var}/%{name} %{_localstatedir}/lib/%{name}
 fi
 
 %post server
@@ -340,8 +340,8 @@ service xinetd condreload
 %{_initrddir}/%{name}
 %{_sysconfdir}/sysconfig/%{name}
 %config(noreplace) %{_sysconfdir}/xinetd.d/kadmind
-%dir %{_localstatedir}/%{name}
-%config(noreplace) %{_localstatedir}/%{name}/kadmind.acl
+%dir %{_localstatedir}/lib/%{name}
+%config(noreplace) %{_localstatedir}/lib/%{name}/kadmind.acl
 %{_mandir}/*1/kimpersonate.1*
 %{_mandir}/*8/iprop.8*
 %{_mandir}/*8/iprop-log.8*
