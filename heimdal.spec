@@ -328,11 +328,9 @@ service xinetd condreload
 %postun telnetd
 service xinetd condreload
 
-%post libs
-/sbin/ldconfig
+%post libs -p /sbin/ldconfig
 
-%postun libs
-/sbin/ldconfig
+%postun libs -p /sbin/ldconfig
 
 %files server
 %defattr(-,root,root)
