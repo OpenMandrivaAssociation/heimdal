@@ -328,9 +328,13 @@ service xinetd condreload
 %postun telnetd
 service xinetd condreload
 
+%if %mdkversion < 200900
 %post libs -p /sbin/ldconfig
+%endif
 
+%if %mdkversion < 200900
 %postun libs -p /sbin/ldconfig
+%endif
 
 %files server
 %defattr(-,root,root)
