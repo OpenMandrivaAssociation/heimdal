@@ -1,10 +1,15 @@
+# Some underlinked bits still:
+%define _disable_ld_as_needed 1
+
+
 Name:		heimdal
-Version:	1.1
-Release:	%mkrel 4
+Version:	1.2
+Release:	%mkrel 0
 Summary:	Heimdal implementation of Kerberos V5 system
 License:	BSD-like
 Group:		Networking/Other
 Source0:	ftp://ftp.pdc.kth.se/pub/heimdal/src/%{name}-%{version}.tar.gz
+Source10:	ftp://ftp.pdc.kth.se/pub/heimdal/src/%{name}-%{version}.tar.gz.asc
 Source1:	%{name}.init
 #FIXME
 #Source2:	%{name}.logrotate
@@ -17,6 +22,8 @@ Source8:    %{name}-kadmind.xinetd
 Source9:	heimdal-1.0-branch-missing-files.tar.gz
 Patch7:		heimdal-1.1-fix-readline-detection.patch
 Patch8:		heimdal-1.1-no-editline.patch
+Patch9:		heimdal-1.2-overlink.patch
+Patch10:	heimdal-1.2-system-sqlite.patch
 URL:		http://www.pdc.kth.se/heimdal/
 BuildRequires:	X11-devel
 BuildRequires:	db-devel >= 4.2.52
@@ -29,6 +36,7 @@ BuildRequires:	readline-devel termcap-devel
 BuildRequires:	pam-devel
 BuildRequires:	e2fsprogs-devel
 BuildRequires:	texinfo
+BuildRequires:	sqlite3-devel
 #Required for tests/ldap
 BuildRequires:	openldap-servers
 BuildRoot:	    %{_tmppath}/%{name}-%{version}
@@ -183,6 +191,7 @@ Telnet is a popular protocol for remote logins across the Internet.
 This package provides a telnet daemon which allows remote logins into
 the machine it is running on.
 
+%if 0
 %package clients
 Summary:	Kerberos programs for use on workstations
 Group:		Networking/Other
@@ -190,6 +199,7 @@ Requires:	%{name}-libs = %{version}-%{release}
 
 %description clients
 Kerberos 5 Clients.
+%endif
 
 %package daemons
 Summary:	Kerberos daemons programs for use on servers
@@ -225,7 +235,11 @@ Contains the documentation covering functions etc. in the heimdal libraries
 %setup -q
 #%setup -q -a 9
 %patch7 -p1 -b .readline
-%patch8 -p1 -b .editline
+#patch8 -p1 -b .editline
+%patch9 -p1
+%patch10 -b .systemsqlite
+perl -pi -e 's/AC_PREREQ\(2.6\d\)/AC_PREREQ\(2.61\)/g' configure.in
+#exit 1
 autoreconf
 
 %build
@@ -243,6 +257,7 @@ autoreconf
 	--with-x \
 	--with-ipv6 \
 	--enable-kcm \
+	--enable-pk-init \
 %if 0
 	--enable-hdb-openldap-module \
 %endif
@@ -473,6 +488,8 @@ service xinetd condreload
 %{_bindir}/pagsh
 %{_bindir}/gss
 %{_bindir}/hxtool
+%{_bindir}/idn-lookup
+%{_bindir}/kswitch
 %attr(4755,root,root) %{_bindir}/otp
 %attr(4755,root,root) %{_bindir}/su
 %attr(4755,root,root) %{_bindir}/ksu
@@ -512,6 +529,7 @@ service xinetd condreload
 %{_mandir}/cat1/tenletxr.1*
 %{_mandir}/cat1/xnlock.1*
 %{_mandir}/man5/krb5.conf.5*
+%{_mandir}/man5/qop.5.*
 %{_mandir}/man5/mech.5*
 %{_mandir}/cat5/krb5.conf.5*
 %{_mandir}/*8/verify_krb5_conf.8*
