@@ -1,10 +1,9 @@
 # Some underlinked bits still:
-%define _disable_ld_as_needed 1
-
+#define _disable_ld_as_needed 1
 
 Name:		heimdal
 Version:	1.2
-Release:	%mkrel 0
+Release:	%mkrel 1
 Summary:	Heimdal implementation of Kerberos V5 system
 License:	BSD-like
 Group:		Networking/Other
@@ -20,8 +19,7 @@ Source6:	%{name}-rshd.xinetd
 Source7:	%{name}-telnetd.xinetd
 Source8:    %{name}-kadmind.xinetd
 Source9:	heimdal-1.0-branch-missing-files.tar.gz
-Patch7:		heimdal-1.1-fix-readline-detection.patch
-Patch8:		heimdal-1.1-no-editline.patch
+Patch8:		heimdal-1.2-no-editline.patch
 Patch9:		heimdal-1.2-overlink.patch
 Patch10:	heimdal-1.2-system-sqlite.patch
 URL:		http://www.pdc.kth.se/heimdal/
@@ -233,13 +231,10 @@ Contains the documentation covering functions etc. in the heimdal libraries
 
 %prep
 %setup -q
-#%setup -q -a 9
-%patch7 -p1 -b .readline
-#patch8 -p1 -b .editline
-%patch9 -p1
-%patch10 -b .systemsqlite
+%patch8 -p1 -b .editline
+%patch9 -p1 -b .overlink
+%patch10 -p1 -b .systemsqlite
 perl -pi -e 's/AC_PREREQ\(2.6\d\)/AC_PREREQ\(2.61\)/g' configure.in
-#exit 1
 autoreconf
 
 %build
