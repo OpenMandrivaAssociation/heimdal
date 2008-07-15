@@ -3,7 +3,7 @@
 
 Name:		heimdal
 Version:	1.2
-Release:	%mkrel 2
+Release:	%mkrel 3
 Summary:	Heimdal implementation of Kerberos V5 system
 License:	BSD-like
 Group:		Networking/Other
@@ -350,7 +350,7 @@ service xinetd condreload
 %defattr(-,root,root)
 %doc NEWS TODO
 %{_initrddir}/%{name}
-%{_sysconfdir}/sysconfig/%{name}
+%config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 %config(noreplace) %{_sysconfdir}/xinetd.d/kadmind
 %dir %{_localstatedir}/lib/%{name}
 %config(noreplace) %{_localstatedir}/lib/%{name}/kadmind.acl
