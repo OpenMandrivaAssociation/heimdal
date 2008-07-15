@@ -3,7 +3,7 @@
 
 Name:		heimdal
 Version:	1.2
-Release:	%mkrel 1
+Release:	%mkrel 2
 Summary:	Heimdal implementation of Kerberos V5 system
 License:	BSD-like
 Group:		Networking/Other
@@ -241,8 +241,8 @@ autoreconf
 %serverbuild
 #	--sysconfdir=%{_sysconfdir}/%{name} \
 %configure2_5x \
-    --libexecdir=%{_sbindir} \
-	--localstatedir=%{_localstatedir}/lib/%{name} \
+	--libexecdir=%{_sbindir} \
+	--with-hdbdir=%{_localstatedir}/lib/%{name} \
 	--disable-static \
 	--enable-new-des3-code \
 	--enable-shared \
