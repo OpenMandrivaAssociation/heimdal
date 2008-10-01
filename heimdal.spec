@@ -3,7 +3,7 @@
 
 Name:		heimdal
 Version:	1.2
-Release:	%mkrel 3
+Release:	%mkrel 4
 Summary:	Heimdal implementation of Kerberos V5 system
 License:	BSD-like
 Group:		Networking/Other
@@ -61,7 +61,6 @@ Summary:	Kerberos programs for use on workstations
 Group:		Networking/Other
 Requires:	%{name}-libs = %{version}-%{release}
 Conflicts:  krb5-workstation
-Conflicts:  openafs
 Provides:   kerberos-workstation
 Obsoletes:  %{name}
 
