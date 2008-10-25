@@ -3,7 +3,7 @@
 
 Name:		heimdal
 Version:	1.2
-Release:	%mkrel 4
+Release:	%mkrel 3
 Summary:	Heimdal implementation of Kerberos V5 system
 License:	BSD-like
 Group:		Networking/Other
@@ -298,6 +298,13 @@ rm -f %{buildroot}%{_bindir}/mk_cmds
 mv %{buildroot}/%{_bindir}/krb5-config %{buildroot}/%{_bindir}/heimdal-config
 %multiarch_binaries %{buildroot}/%{_bindir}/heimdal-config
 
+# utils
+install -d -m 755 %{buildroot}%{_datadir}/%{name}
+install -m 755 tools/kdc-log-analyze.pl %{buildroot}%{_datadir}/%{name}
+install -m 755 lib/kadm5/check-cracklib.pl %{buildroot}%{_datadir}/%{name}
+perl -pi -e 's|^#!/usr/pkg/bin/perl|#!%{_bindir}/perl|' \
+    %{buildroot}%{_datadir}/%{name}/*.pl
+
 %check
 %if %{?_with_test:1}%{!?_with_test:0}
 # For some reason this check fails partially just under rpm:
@@ -389,6 +396,7 @@ service xinetd condreload
 %{_sbindir}/kcm
 %{_sbindir}/kdigest
 %{_sbindir}/kimpersonate
+%{_datadir}/%{name}
 %doc doc/*.html lib/hdb/hdb.schema
 
 %if 0
