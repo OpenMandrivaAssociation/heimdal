@@ -3,7 +3,7 @@
 
 Name:		heimdal
 Version:	1.2
-Release:	%mkrel 5
+Release:	%mkrel 6
 Summary:	Heimdal implementation of Kerberos V5 system
 License:	BSD-like
 Group:		Networking/Other
@@ -22,6 +22,7 @@ Source9:	heimdal-1.0-branch-missing-files.tar.gz
 Patch8:		heimdal-1.2-no-editline.patch
 Patch9:		heimdal-1.2-overlink.patch
 Patch10:	heimdal-1.2-system-sqlite.patch
+Patch11:	heimdal-1.2-passwd-check.patch
 URL:		http://www.pdc.kth.se/heimdal/
 BuildRequires:	X11-devel
 BuildRequires:	db-devel >= 4.2.52
@@ -233,6 +234,7 @@ Contains the documentation covering functions etc. in the heimdal libraries
 %patch8 -p1 -b .editline
 %patch9 -p1 -b .overlink
 %patch10 -p1 -b .systemsqlite
+%patch11 -p1 -b .passwd_check
 perl -pi -e 's/AC_PREREQ\(2.6\d\)/AC_PREREQ\(2.61\)/g' configure.in
 autoreconf
 
@@ -302,7 +304,7 @@ mv %{buildroot}/%{_bindir}/krb5-config %{buildroot}/%{_bindir}/heimdal-config
 install -d -m 755 %{buildroot}%{_datadir}/%{name}
 install -m 755 tools/kdc-log-analyze.pl %{buildroot}%{_datadir}/%{name}
 install -m 755 lib/kadm5/check-cracklib.pl %{buildroot}%{_datadir}/%{name}
-perl -pi -e 's|^#!/usr/pkg/bin/perl|#!%{_bindir}/perl|' \
+perl -pi -e 's|^#! ?/usr/pkg/bin/perl|#!%{_bindir}/perl|' \
     %{buildroot}%{_datadir}/%{name}/*.pl
 
 %check
@@ -396,6 +398,7 @@ service xinetd condreload
 %{_sbindir}/kcm
 %{_sbindir}/kdigest
 %{_sbindir}/kimpersonate
+%{_libdir}/%{name}
 %{_datadir}/%{name}
 %doc doc/*.html lib/hdb/hdb.schema
 
