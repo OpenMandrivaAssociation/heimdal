@@ -2,8 +2,8 @@
 #define _disable_ld_as_needed 1
 
 Name:		heimdal
-Version:	1.2
-Release:	%mkrel 6
+Version:	1.2.1
+Release:	%mkrel 1
 Summary:	Heimdal implementation of Kerberos V5 system
 License:	BSD-like
 Group:		Networking/Other
