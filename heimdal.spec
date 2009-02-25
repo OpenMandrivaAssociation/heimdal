@@ -3,7 +3,7 @@
 
 Name:		heimdal
 Version:	1.2.1
-Release:	%mkrel 1
+Release:	%mkrel 2
 Summary:	Heimdal implementation of Kerberos V5 system
 License:	BSD-like
 Group:		Networking/Other
@@ -19,6 +19,7 @@ Source6:	%{name}-rshd.xinetd
 Source7:	%{name}-telnetd.xinetd
 Source8:    %{name}-kadmind.xinetd
 Source9:	heimdal-1.0-branch-missing-files.tar.gz
+Patch1:		heimdal-1.2.1-fix-format-errors.patch
 Patch8:		heimdal-1.2-no-editline.patch
 Patch9:		heimdal-1.2-overlink.patch
 Patch10:	heimdal-1.2-system-sqlite.patch
@@ -231,6 +232,7 @@ Contains the documentation covering functions etc. in the heimdal libraries
 
 %prep
 %setup -q
+%patch1 -p1 -b .format
 %patch8 -p1 -b .editline
 %patch9 -p1 -b .overlink
 %patch10 -p1 -b .systemsqlite
