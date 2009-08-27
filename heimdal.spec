@@ -1,14 +1,16 @@
 # Some underlinked bits still:
 #define _disable_ld_as_needed 1
+%define beta pre6
+#define _fortify_cflags %nil
 
 Name:		heimdal
-Version:	1.2.1
-Release:	%mkrel 2
+Version:	1.3.0
+Release:	%mkrel 0.%{beta}.1
 Summary:	Heimdal implementation of Kerberos V5 system
 License:	BSD-like
 Group:		Networking/Other
-Source0:	ftp://ftp.pdc.kth.se/pub/heimdal/src/%{name}-%{version}.tar.gz
-Source10:	ftp://ftp.pdc.kth.se/pub/heimdal/src/%{name}-%{version}.tar.gz.asc
+Source0:	ftp://ftp.pdc.kth.se/pub/heimdal/src/%{name}-%{version}%{beta}.tar.gz
+Source10:	ftp://ftp.pdc.kth.se/pub/heimdal/src/%{name}-%{version}%{beta}.tar.gz.asc
 Source1:	%{name}.init
 #FIXME
 #Source2:	%{name}.logrotate
@@ -18,12 +20,10 @@ Source5:	%{name}-ftpd.xinetd
 Source6:	%{name}-rshd.xinetd
 Source7:	%{name}-telnetd.xinetd
 Source8:    %{name}-kadmind.xinetd
-Source9:	heimdal-1.0-branch-missing-files.tar.gz
-Patch1:		heimdal-1.2.1-fix-format-errors.patch
 Patch8:		heimdal-1.2-no-editline.patch
-Patch9:		heimdal-1.2-overlink.patch
-Patch10:	heimdal-1.2-system-sqlite.patch
+Patch9:		heimdal-1.3.0pre6-no-underlinking.patch
 Patch11:	heimdal-1.2-passwd-check.patch
+Patch12:	heimdal.git-13ba2956cc2a8c1c1f681586b05a96679a57334e.patch
 URL:		http://www.pdc.kth.se/heimdal/
 BuildRequires:	X11-devel
 BuildRequires:	db-devel >= 4.2.52
@@ -44,7 +44,6 @@ BuildRoot:	    %{_tmppath}/%{name}-%{version}
 %if %mdkversion <= 200710
 %define _libdir %{_prefix}/%{_lib}/%{name}
 %endif
-%define _fortify_cflags %nil
 
 %description
 Heimdal is a free implementation of Kerberos 5. The goals are to:
@@ -231,13 +230,13 @@ Conflicts:	heimdal-devel <= 1.0.1-4
 Contains the documentation covering functions etc. in the heimdal libraries
 
 %prep
-%setup -q
-%patch1 -p1 -b .format
-%patch8 -p1 -b .editline
-%patch9 -p1 -b .overlink
-%patch10 -p1 -b .systemsqlite
+%setup -q -n %{name}-%{version}%{beta}
+#patch1 -p1 -b .format
+#patch8 -p1 -b .editline
+%patch9 -p1 -b .no_underlinking
 %patch11 -p1 -b .passwd_check
-perl -pi -e 's/AC_PREREQ\(2.6\d\)/AC_PREREQ\(2.61\)/g' configure.in
+%patch12 -p1 -b .binddomain
+#perl -pi -e 's/AC_PREREQ\(2.6\d\)/AC_PREREQ\(2.61\)/g' configure.in
 autoreconf
 
 %build
@@ -247,20 +246,21 @@ autoreconf
 	--libexecdir=%{_sbindir} \
 	--with-hdbdir=%{_localstatedir}/lib/%{name} \
 	--disable-static \
-	--enable-new-des3-code \
 	--enable-shared \
 	--with-readline \
 	--with-readline-lib=%{_libdir} \
 	--with-readline-include=%{_includedir}/readline \
+	--with-openldap=%{_prefix} \
+	--with-sqlite3=%{_prefix} \
+	--with-libintl=%{_prefix} \
 	--with-x \
 	--with-ipv6 \
 	--enable-kcm \
-	--enable-pk-init \
+	--enable-pk-init
 %if 0
-	--enable-hdb-openldap-module \
+	--enable-hdb-openldap-module
 %endif
-	--with-openldap=%{_prefix}
-%make
+make
 %make -C doc html
 
 %install
@@ -504,7 +504,7 @@ service xinetd condreload
 %{_sbindir}/ktutil
 %{_mandir}/man1/afslog.1*
 %{_mandir}/man1/ksu.1*
-%{_mandir}/man1/kauth.1*
+%{_mandir}/man1/kdigest.1*
 %{_mandir}/*1/kdestroy.1*
 %{_mandir}/*1/kgetcred.1*
 %{_mandir}/man1/kinit.1*
@@ -522,7 +522,7 @@ service xinetd condreload
 %{_mandir}/man1/xnlock.1*
 %{_mandir}/cat1/afslog.1*
 %{_mandir}/cat1/ksu.1*
-%{_mandir}/cat1/kauth.1*
+%{_mandir}/cat1/kdigest.1*
 %{_mandir}/cat1/kinit.1*
 %{_mandir}/cat1/kpasswd.1*
 %{_mandir}/cat1/pagsh.1*
