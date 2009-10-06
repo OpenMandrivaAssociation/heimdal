@@ -1,45 +1,43 @@
 # Some underlinked bits still:
 #define _disable_ld_as_needed 1
-%define beta pre6
+%define beta pre10
 #define _fortify_cflags %nil
 
-Name:		heimdal
-Version:	1.3.0
-Release:	%mkrel 0.%{beta}.1
-Summary:	Heimdal implementation of Kerberos V5 system
-License:	BSD-like
-Group:		Networking/Other
-Source0:	ftp://ftp.pdc.kth.se/pub/heimdal/src/%{name}-%{version}%{beta}.tar.gz
-Source10:	ftp://ftp.pdc.kth.se/pub/heimdal/src/%{name}-%{version}%{beta}.tar.gz.asc
-Source1:	%{name}.init
+Name:       heimdal
+Version:    1.3.0
+Release:    %mkrel 0.%{beta}.1
+Summary:    Heimdal implementation of Kerberos V5 system
+License:    BSD-like
+Group:      Networking/Other
+URL:        http://www.pdc.kth.se/heimdal/
+Source0:    ftp://ftp.pdc.kth.se/pub/heimdal/src/%{name}-%{version}%{beta}.tar.gz
+Source10:   ftp://ftp.pdc.kth.se/pub/heimdal/src/%{name}-%{version}%{beta}.tar.gz.asc
+Source1:    %{name}.init
 #FIXME
-#Source2:	%{name}.logrotate
-Source3:	%{name}.sysconfig
-#Source4:	%{name}-krb5.conf
-Source5:	%{name}-ftpd.xinetd
-Source6:	%{name}-rshd.xinetd
-Source7:	%{name}-telnetd.xinetd
+#Source2:   %{name}.logrotate
+Source3:    %{name}.sysconfig
+#Source4:   %{name}-krb5.conf
+Source5:    %{name}-ftpd.xinetd
+Source6:    %{name}-rshd.xinetd
+Source7:    %{name}-telnetd.xinetd
 Source8:    %{name}-kadmind.xinetd
-Patch8:		heimdal-1.2-no-editline.patch
-Patch9:		heimdal-1.3.0pre6-no-underlinking.patch
-Patch11:	heimdal-1.2-passwd-check.patch
-Patch12:	heimdal.git-13ba2956cc2a8c1c1f681586b05a96679a57334e.patch
-URL:		http://www.pdc.kth.se/heimdal/
-BuildRequires:	X11-devel
-BuildRequires:	db-devel >= 4.2.52
-BuildRequires:	flex
-BuildRequires:	bison
-BuildRequires:	libtool
-BuildRequires:	ncurses-devel >= 5.3
-BuildRequires:	openldap-devel >= 2.0
-BuildRequires:	readline-devel termcap-devel
-BuildRequires:	pam-devel
-BuildRequires:	e2fsprogs-devel
-BuildRequires:	texinfo
-BuildRequires:	sqlite3-devel
+Patch0:     heimdal-1.3.0pre10-fix-version-script.patch
+Patch11:    heimdal-1.2-passwd-check.patch
+BuildRequires:  X11-devel
+BuildRequires:  db-devel >= 4.2.52
+BuildRequires:  flex
+BuildRequires:  bison
+BuildRequires:  libtool
+BuildRequires:  ncurses-devel >= 5.3
+BuildRequires:  openldap-devel >= 2.0
+BuildRequires:  readline-devel termcap-devel
+BuildRequires:  pam-devel
+BuildRequires:  e2fsprogs-devel
+BuildRequires:  texinfo
+BuildRequires:  sqlite3-devel
 #Required for tests/ldap
-BuildRequires:	openldap-servers
-BuildRoot:	    %{_tmppath}/%{name}-%{version}
+BuildRequires:  openldap-servers
+BuildRoot:      %{_tmppath}/%{name}-%{version}
 
 %if %mdkversion <= 200710
 %define _libdir %{_prefix}/%{_lib}/%{name}
@@ -58,9 +56,9 @@ Heimdal is a free implementation of Kerberos 5. The goals are to:
    - IPv6 support
 
 %package workstation
-Summary:	Kerberos programs for use on workstations
-Group:		Networking/Other
-Requires:	%{name}-libs = %{version}-%{release}
+Summary:    Kerberos programs for use on workstations
+Group:      Networking/Other
+Requires:   %{name}-libs = %{version}-%{release}
 Conflicts:  krb5-workstation
 Provides:   kerberos-workstation
 Obsoletes:  %{name}
@@ -69,14 +67,14 @@ Obsoletes:  %{name}
 This package contains Kerberos 5 programs for use on workstations.
 
 %package server
-Summary:	Kerberos Server
-Group:		System/Servers
-Requires:	%{name}-libs = %{version}-%{release}
+Summary:    Kerberos Server
+Group:      System/Servers
+Requires:   %{name}-libs = %{version}-%{release}
 # krb5 package ships krb5.conf etc on mdv 2008.0 and later
 %if %mdkversion >= 200800
-Requires:	krb5
+Requires:   krb5
 %endif
-Requires(post):	chkconfig
+Requires(post): chkconfig
 Requires(preun):chkconfig
 Conflicts:  krb5-server
 
@@ -86,9 +84,9 @@ This package contains the master KDC.
 # Not working right yet
 %if 0
 %package hdb_ldap
-Summary:	Kerberos Server LDAP Backend
-Group:		System/Servers
-Requires:	%{name}-server = %{version}-%{release}
+Summary:    Kerberos Server LDAP Backend
+Group:      System/Servers
+Requires:   %{name}-server = %{version}-%{release}
 
 %description hdb_ldap
 This package contains the LDAP HDB backend plugin, which allows the use of
@@ -96,10 +94,10 @@ an LDAP server for storing the Heimdal database.
 %endif
 
 %package libs
-Summary:	Heimdal shared libraries
-Group:		System/Libraries
+Summary:    Heimdal shared libraries
+Group:      System/Libraries
 %if %mdkversion >= 200800
-Conflicts:	%{_lib}gssapi2
+Conflicts:  %{_lib}gssapi2
 %endif
 
 %description libs
@@ -107,11 +105,11 @@ This package contains shared libraries required by several of the other heimdal
 packages.
 
 %package login
-Summary:	Used when signing onto a system
-Group:		Networking/Other
-Requires:	%{name}-libs = %{version}-%{release}
-Provides:	login
-Conflicts:	util-linux shadow-utils
+Summary:    Used when signing onto a system
+Group:      Networking/Other
+Requires:   %{name}-libs = %{version}-%{release}
+Provides:   login
+Conflicts:  util-linux shadow-utils
 
 %description login
 login is used when signing onto a system. It can also be used to
@@ -120,10 +118,10 @@ support for this feature built into them, however). This package
 contain kerberized version login program.
 
 %package ftp
-Summary:	The standard UNIX FTP (file transfer protocol) client
-Group:		Networking/Other
-Requires:	%{name}-libs = %{version}-%{release}
-Conflicts:	ftp-client-krb5
+Summary:    The standard UNIX FTP (file transfer protocol) client
+Group:      Networking/Other
+Requires:   %{name}-libs = %{version}-%{release}
+Conflicts:  ftp-client-krb5
 
 %description ftp
 The ftp package provides the standard UNIX command-line FTP client
@@ -132,9 +130,9 @@ protocol, which is a widely used Internet protocol for transferring
 files and for archiving files.
 
 %package rsh
-Summary:	Clients for remote access commands (rsh, rlogin, rcp)
-Group:		Networking/Other
-Requires:	%{name}-libs = %{version}-%{release}
+Summary:    Clients for remote access commands (rsh, rlogin, rcp)
+Group:      Networking/Other
+Requires:   %{name}-libs = %{version}-%{release}
 
 %description rsh
 The rsh package contains a set of programs which allow users to run
@@ -144,20 +142,20 @@ use rhosts style authentication. This package contains the clients
 needed for all of these services.
 
 %package telnet
-Summary:	Client for the telnet remote login
-Group:		Networking/Other
-Requires:	%{name}-libs = %{version}-%{release}
-Conflicts:	telnet-client-krb5
+Summary:    Client for the telnet remote login
+Group:      Networking/Other
+Requires:   %{name}-libs = %{version}-%{release}
+Conflicts:  telnet-client-krb5
 
 %description telnet
 Telnet is a popular protocol for remote logins across the Internet.
 This package provides a command line telnet client.
 
 %package ftpd
-Summary:	The standard UNIX FTP (file transfer protocol) server
-Group:		System/Servers
-Requires(pre):	xinetd
-Requires:	    %{name}-libs = %{version}-%{release}
+Summary:    The standard UNIX FTP (file transfer protocol) server
+Group:      System/Servers
+Requires(pre):  xinetd
+Requires:       %{name}-libs = %{version}-%{release}
 Conflicts:      ftp-server-krb5
 
 %description ftpd
@@ -165,10 +163,10 @@ FTP is the file transfer protocol, which is a widely used Internet
 protocol for transferring files and for archiving files.
 
 %package rshd
-Summary:	Server for remote access commands (rsh, rlogin, rcp)
-Group:		System/Servers
-Requires(pre):	xinetd
-Requires:	    %{name}-libs = %{version}-%{release}
+Summary:    Server for remote access commands (rsh, rlogin, rcp)
+Group:      System/Servers
+Requires(pre):  xinetd
+Requires:       %{name}-libs = %{version}-%{release}
 
 %description rshd
 The rsh package contains a set of programs which allow users to run
@@ -178,10 +176,10 @@ use rhosts style authentication. This package contains servers needed
 for all of these services.
 
 %package telnetd
-Summary:	Server for the telnet remote login
-Group:		System/Servers
-Requires(pre):	xinetd
-Requires:	    %{name}-libs = %{version}-%{release}
+Summary:    Server for the telnet remote login
+Group:      System/Servers
+Requires(pre):  xinetd
+Requires:       %{name}-libs = %{version}-%{release}
 Conflicts:      telnet-server-krb5
 
 %description telnetd
@@ -191,26 +189,26 @@ the machine it is running on.
 
 %if 0
 %package clients
-Summary:	Kerberos programs for use on workstations
-Group:		Networking/Other
-Requires:	%{name}-libs = %{version}-%{release}
+Summary:    Kerberos programs for use on workstations
+Group:      Networking/Other
+Requires:   %{name}-libs = %{version}-%{release}
 
 %description clients
 Kerberos 5 Clients.
 %endif
 
 %package daemons
-Summary:	Kerberos daemons programs for use on servers
-Group:		System/Servers
-Requires:	%{name}-libs = %{version}-%{release}
+Summary:    Kerberos daemons programs for use on servers
+Group:      System/Servers
+Requires:   %{name}-libs = %{version}-%{release}
 
 %description daemons
 Kerberos Daemons.
 
 %package devel
-Summary:	Header files for heimdal
-Group:		System/Libraries
-Requires:	%{name}-libs = %{version}-%{release}
+Summary:    Header files for heimdal
+Group:      System/Libraries
+Requires:   %{name}-libs = %{version}-%{release}
 Conflicts:  libxmlrpc-devel
 Conflicts:  krb5-devel
 %if %mdkversion < 200800
@@ -222,43 +220,39 @@ contains files needed to compile and link software using the kerberos
 libraries.
 
 %package devel-doc
-Summary:	Developer documentation for heimdal
-Group:		System/Libraries
-Conflicts:	heimdal-devel <= 1.0.1-4
+Summary:    Developer documentation for heimdal
+Group:      System/Libraries
+Conflicts:  heimdal-devel <= 1.0.1-4
 
 %description devel-doc
 Contains the documentation covering functions etc. in the heimdal libraries
 
 %prep
 %setup -q -n %{name}-%{version}%{beta}
-#patch1 -p1 -b .format
-#patch8 -p1 -b .editline
-%patch9 -p1 -b .no_underlinking
+%patch0 -p1 -b .version-script
 %patch11 -p1 -b .passwd_check
-%patch12 -p1 -b .binddomain
-#perl -pi -e 's/AC_PREREQ\(2.6\d\)/AC_PREREQ\(2.61\)/g' configure.in
 autoreconf
 
 %build
 %serverbuild
-#	--sysconfdir=%{_sysconfdir}/%{name} \
+#   --sysconfdir=%{_sysconfdir}/%{name} \
 %configure2_5x \
-	--libexecdir=%{_sbindir} \
-	--with-hdbdir=%{_localstatedir}/lib/%{name} \
-	--disable-static \
-	--enable-shared \
-	--with-readline \
-	--with-readline-lib=%{_libdir} \
-	--with-readline-include=%{_includedir}/readline \
-	--with-openldap=%{_prefix} \
-	--with-sqlite3=%{_prefix} \
-	--with-libintl=%{_prefix} \
-	--with-x \
-	--with-ipv6 \
-	--enable-kcm \
-	--enable-pk-init
+    --libexecdir=%{_sbindir} \
+    --with-hdbdir=%{_localstatedir}/lib/%{name} \
+    --disable-static \
+    --enable-shared \
+    --with-readline \
+    --with-readline-lib=%{_libdir} \
+    --with-readline-include=%{_includedir}/readline \
+    --with-openldap=%{_prefix} \
+    --with-sqlite3=%{_prefix} \
+    --with-libintl=%{_prefix} \
+    --with-x \
+    --with-ipv6 \
+    --enable-kcm \
+    --enable-pk-init
 %if 0
-	--enable-hdb-openldap-module
+    --enable-hdb-openldap-module
 %endif
 make
 %make -C doc html
@@ -308,6 +302,10 @@ install -m 755 tools/kdc-log-analyze.pl %{buildroot}%{_datadir}/%{name}
 install -m 755 lib/kadm5/check-cracklib.pl %{buildroot}%{_datadir}/%{name}
 perl -pi -e 's|^#! ?/usr/pkg/bin/perl|#!%{_bindir}/perl|' \
     %{buildroot}%{_datadir}/%{name}/*.pl
+
+# stuff installed there because of libexecdir redefinition
+mv %{buildroot}%{_sbindir}/%{name}/* %{buildroot}%{_libdir}/%{name}
+rmdir %{buildroot}%{_sbindir}/%{name}
 
 %check
 %if %{?_with_test:1}%{!?_with_test:0}
@@ -505,10 +503,11 @@ service xinetd condreload
 %{_mandir}/man1/afslog.1*
 %{_mandir}/man1/ksu.1*
 %{_mandir}/man1/kdigest.1*
-%{_mandir}/*1/kdestroy.1*
-%{_mandir}/*1/kgetcred.1*
+%{_mandir}/man1/kdestroy.1*
+%{_mandir}/man1/kgetcred.1*
+%{_mandir}/man1/klist.1*
+%{_mandir}/man1/kswitch.1*
 %{_mandir}/man1/kinit.1*
-%{_mandir}/*1/klist.1*
 %{_mandir}/man1/kpasswd.1*
 %{_mandir}/man1/pagsh.1*
 %{_mandir}/man1/otp.1*
@@ -520,6 +519,10 @@ service xinetd condreload
 %{_mandir}/man1/rxterm.1*
 %{_mandir}/man1/tenletxr.1*
 %{_mandir}/man1/xnlock.1*
+%{_mandir}/cat1/kdestroy.1*
+%{_mandir}/cat1/kgetcred.1*
+%{_mandir}/cat1/klist.1*
+%{_mandir}/cat1/kswitch.1*
 %{_mandir}/cat1/afslog.1*
 %{_mandir}/cat1/ksu.1*
 %{_mandir}/cat1/kdigest.1*
