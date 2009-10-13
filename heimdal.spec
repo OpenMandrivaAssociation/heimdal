@@ -1,6 +1,6 @@
 # Some underlinked bits still:
 #define _disable_ld_as_needed 1
-%define beta pre10
+%define beta rc1
 #define _fortify_cflags %nil
 
 Name:       heimdal
@@ -21,7 +21,6 @@ Source5:    %{name}-ftpd.xinetd
 Source6:    %{name}-rshd.xinetd
 Source7:    %{name}-telnetd.xinetd
 Source8:    %{name}-kadmind.xinetd
-Patch0:     heimdal-1.3.0pre10-fix-version-script.patch
 Patch11:    heimdal-1.2-passwd-check.patch
 BuildRequires:  X11-devel
 BuildRequires:  db-devel >= 4.2.52
@@ -229,7 +228,6 @@ Contains the documentation covering functions etc. in the heimdal libraries
 
 %prep
 %setup -q -n %{name}-%{version}%{beta}
-%patch0 -p1 -b .version-script
 %patch11 -p1 -b .passwd_check
 autoreconf
 
