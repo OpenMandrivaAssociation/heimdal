@@ -500,7 +500,7 @@ service xinetd condreload
 %{_sbindir}/ktutil
 %{_mandir}/man1/afslog.1*
 %{_mandir}/man1/ksu.1*
-%{_mandir}/man1/kdigest.1*
+# %{_mandir}/man1/kdigest.1*
 %{_mandir}/man1/kdestroy.1*
 %{_mandir}/man1/kgetcred.1*
 %{_mandir}/man1/klist.1*
