@@ -1,17 +1,17 @@
 # Some underlinked bits still:
 #define _disable_ld_as_needed 1
-%define beta rc1
+#define beta rc1
 #define _fortify_cflags %nil
 
 Name:       heimdal
 Version:    1.3.0
-Release:    %mkrel 0.%{beta}.1
+Release:    %mkrel 1
 Summary:    Heimdal implementation of Kerberos V5 system
 License:    BSD-like
 Group:      Networking/Other
 URL:        http://www.pdc.kth.se/heimdal/
-Source0:    ftp://ftp.pdc.kth.se/pub/heimdal/src/%{name}-%{version}%{beta}.tar.gz
-Source10:   ftp://ftp.pdc.kth.se/pub/heimdal/src/%{name}-%{version}%{beta}.tar.gz.asc
+Source0:    ftp://ftp.pdc.kth.se/pub/heimdal/src/%{name}-%{version}.tar.bz2
+Source10:   ftp://ftp.pdc.kth.se/pub/heimdal/src/%{name}-%{version}.tar.gz.asc
 Source1:    %{name}.init
 #FIXME
 #Source2:   %{name}.logrotate
@@ -227,7 +227,7 @@ Conflicts:  heimdal-devel <= 1.0.1-4
 Contains the documentation covering functions etc. in the heimdal libraries
 
 %prep
-%setup -q -n %{name}-%{version}%{beta}
+%setup -q -n %{name}-%{version}
 %patch11 -p1 -b .passwd_check
 autoreconf
 
