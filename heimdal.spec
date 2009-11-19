@@ -523,7 +523,7 @@ service xinetd condreload
 %{_mandir}/cat1/kswitch.1*
 %{_mandir}/cat1/afslog.1*
 %{_mandir}/cat1/ksu.1*
-%{_mandir}/cat1/kdigest.1*
+# %{_mandir}/cat1/kdigest.1*
 %{_mandir}/cat1/kinit.1*
 %{_mandir}/cat1/kpasswd.1*
 %{_mandir}/cat1/pagsh.1*
