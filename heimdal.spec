@@ -360,7 +360,12 @@ service xinetd condreload
 %config(noreplace) %{_sysconfdir}/xinetd.d/kadmind
 %dir %{_localstatedir}/lib/%{name}
 %config(noreplace) %{_localstatedir}/lib/%{name}/kadmind.acl
-%{_mandir}/*1/kimpersonate.1*
+# %{_mandir}/*1/kimpersonate.1*
+%{_bindir}/compile_et
+%{_mandir}/cat8/kdigest.8.lzma
+%{_mandir}/cat8/kimpersonate.8.lzma
+%{_mandir}/man8/kdigest.8.lzma
+%{_mandir}/man8/kimpersonate.8.lzma
 %{_mandir}/*8/iprop.8*
 %{_mandir}/*8/iprop-log.8*
 %{_mandir}/man8/kstash.8*
