@@ -4,7 +4,7 @@
 #define _fortify_cflags %nil
 
 Name:       heimdal
-Version:    1.3.0
+Version:    1.3.1
 Release:    %mkrel 1
 Summary:    Heimdal implementation of Kerberos V5 system
 License:    BSD-like
