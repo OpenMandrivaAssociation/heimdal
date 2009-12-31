@@ -5,7 +5,7 @@
 
 Name:       heimdal
 Version:    1.3.1
-Release:    %mkrel 1
+Release:    %mkrel 2
 Summary:    Heimdal implementation of Kerberos V5 system
 License:    BSD-like
 Group:      Networking/Other
