@@ -5,7 +5,7 @@
 
 Name:       heimdal
 Version:    1.3.1
-Release:    %mkrel 2
+Release:    %mkrel 3
 Summary:    Heimdal implementation of Kerberos V5 system
 License:    BSD-like
 Group:      Networking/Other
@@ -21,6 +21,8 @@ Source5:    %{name}-ftpd.xinetd
 Source6:    %{name}-rshd.xinetd
 Source7:    %{name}-telnetd.xinetd
 Source8:    %{name}-kadmind.xinetd
+# https://roundup.it.su.se/jira/browse/HEIMDAL-704
+Patch1:     heimdal-1.3.1-fix-symbols-export.patch
 Patch11:    heimdal-1.2-passwd-check.patch
 BuildRequires:  X11-devel
 BuildRequires:  db-devel >= 4.2.52
@@ -228,6 +230,7 @@ Contains the documentation covering functions etc. in the heimdal libraries
 
 %prep
 %setup -q -n %{name}-%{version}
+%patch1 -p1 -b .symbols
 %patch11 -p1 -b .passwd_check
 autoreconf
 
@@ -256,7 +259,6 @@ make
 %make -C doc html
 
 %install
-export DONT_GPRINTIFY=1
 rm -rf %{buildroot}
 install -d %{buildroot}%{_localstatedir}/lib/%{name}
 #install -d %{buildroot}%{_sysconfdir}/%{name}
