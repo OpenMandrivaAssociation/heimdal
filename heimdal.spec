@@ -5,7 +5,7 @@
 
 Name:       heimdal
 Version:    1.3.1
-Release:    %mkrel 3
+Release:    %mkrel 4
 Summary:    Heimdal implementation of Kerberos V5 system
 License:    BSD-like
 Group:      Networking/Other
@@ -24,6 +24,7 @@ Source8:    %{name}-kadmind.xinetd
 # https://roundup.it.su.se/jira/browse/HEIMDAL-704
 Patch1:     heimdal-1.3.1-fix-symbols-export.patch
 Patch11:    heimdal-1.2-passwd-check.patch
+Patch12:	heimdal-shared-libcom_err.patch
 BuildRequires:  X11-devel
 BuildRequires:  db-devel >= 4.2.52
 BuildRequires:  flex
@@ -232,6 +233,7 @@ Contains the documentation covering functions etc. in the heimdal libraries
 %setup -q -n %{name}-%{version}
 %patch1 -p1 -b .symbols
 %patch11 -p1 -b .passwd_check
+%patch12 -p1 -b .com_right_r
 autoreconf
 
 %build
@@ -363,7 +365,6 @@ service xinetd condreload
 %dir %{_localstatedir}/lib/%{name}
 %config(noreplace) %{_localstatedir}/lib/%{name}/kadmind.acl
 # %{_mandir}/*1/kimpersonate.1*
-%{_bindir}/compile_et
 %{_mandir}/cat8/kdigest.8.lzma
 %{_mandir}/cat8/kimpersonate.8.lzma
 %{_mandir}/man8/kdigest.8.lzma
