@@ -4,8 +4,8 @@
 #define _fortify_cflags %nil
 
 Name:       heimdal
-Version:    1.3.1
-Release:    %mkrel 4
+Version:    1.3.2
+Release:    %mkrel 1
 Summary:    Heimdal implementation of Kerberos V5 system
 License:    BSD-like
 Group:      Networking/Other
@@ -21,8 +21,6 @@ Source5:    %{name}-ftpd.xinetd
 Source6:    %{name}-rshd.xinetd
 Source7:    %{name}-telnetd.xinetd
 Source8:    %{name}-kadmind.xinetd
-# https://roundup.it.su.se/jira/browse/HEIMDAL-704
-Patch1:     heimdal-1.3.1-fix-symbols-export.patch
 Patch11:    heimdal-1.2-passwd-check.patch
 Patch12:	heimdal-shared-libcom_err.patch
 BuildRequires:  X11-devel
@@ -231,7 +229,6 @@ Contains the documentation covering functions etc. in the heimdal libraries
 
 %prep
 %setup -q -n %{name}-%{version}
-%patch1 -p1 -b .symbols
 %patch11 -p1 -b .passwd_check
 %patch12 -p1 -b .com_right_r
 autoreconf
