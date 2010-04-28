@@ -5,7 +5,7 @@
 
 Name:       heimdal
 Version:    1.3.2
-Release:    %mkrel 1
+Release:    %mkrel 2
 Summary:    Heimdal implementation of Kerberos V5 system
 License:    BSD-like
 Group:      Networking/Other
@@ -145,7 +145,9 @@ needed for all of these services.
 Summary:    Client for the telnet remote login
 Group:      Networking/Other
 Requires:   %{name}-libs = %{version}-%{release}
-Conflicts:  telnet-client-krb5
+Conflicts:  krb5-appl-clients
+Conflicts:  netkit-telnet
+Provides:   telnet-client
 
 %description telnet
 Telnet is a popular protocol for remote logins across the Internet.
@@ -180,7 +182,9 @@ Summary:    Server for the telnet remote login
 Group:      System/Servers
 Requires(pre):  xinetd
 Requires:       %{name}-libs = %{version}-%{release}
-Conflicts:      telnet-server-krb5
+Conflicts:  krb5-appl-servers
+Conflicts:  netkit-telnet-server
+Provides:   telnet-server
 
 %description telnetd
 Telnet is a popular protocol for remote logins across the Internet.
