@@ -23,6 +23,7 @@ Source7:    %{name}-telnetd.xinetd
 Source8:    %{name}-kadmind.xinetd
 Patch11:    heimdal-1.2-passwd-check.patch
 Patch12:	heimdal-shared-libcom_err.patch
+Patch13:	heimdal-1.3.2-fix-build-openssl-1.0.patch
 BuildRequires:  X11-devel
 BuildRequires:  db-devel >= 4.2.52
 BuildRequires:  flex
@@ -235,6 +236,7 @@ Contains the documentation covering functions etc. in the heimdal libraries
 %setup -q -n %{name}-%{version}
 %patch11 -p1 -b .passwd_check
 %patch12 -p1 -b .com_right_r
+%patch13 -p1 -b .openssl-1.0
 autoreconf
 
 %build
