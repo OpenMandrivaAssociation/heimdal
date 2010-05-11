@@ -5,7 +5,7 @@
 
 Name:       heimdal
 Version:    1.3.2
-Release:    %mkrel 2
+Release:    %mkrel 3
 Summary:    Heimdal implementation of Kerberos V5 system
 License:    BSD-like
 Group:      Networking/Other
@@ -24,6 +24,7 @@ Source8:    %{name}-kadmind.xinetd
 Patch11:    heimdal-1.2-passwd-check.patch
 Patch12:	heimdal-shared-libcom_err.patch
 Patch13:	heimdal-1.3.2-fix-build-openssl-1.0.patch
+Patch14:	heimdal-1.3-search-samba-accounts-by-uid.patch
 BuildRequires:  X11-devel
 BuildRequires:  db-devel >= 4.2.52
 BuildRequires:  flex
@@ -237,6 +238,7 @@ Contains the documentation covering functions etc. in the heimdal libraries
 %patch11 -p1 -b .passwd_check
 %patch12 -p1 -b .com_right_r
 %patch13 -p1 -b .openssl-1.0
+%patch14 -p1 -b .searchsambabyuid
 autoreconf
 
 %build
