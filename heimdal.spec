@@ -4,7 +4,7 @@
 #define _fortify_cflags %nil
 
 Name:       heimdal
-Version:    1.3.3
+Version:    1.4
 Release:    %mkrel 1
 Summary:    Heimdal implementation of Kerberos V5 system
 License:    BSD-like
@@ -21,10 +21,9 @@ Source5:    %{name}-ftpd.xinetd
 Source6:    %{name}-rshd.xinetd
 Source7:    %{name}-telnetd.xinetd
 Source8:    %{name}-kadmind.xinetd
-Patch11:    heimdal-1.2-passwd-check.patch
-Patch12:	heimdal-shared-libcom_err.patch
-Patch13:	heimdal-1.3.2-fix-build-openssl-1.0.patch
-Patch14:	heimdal-1.3-search-samba-accounts-by-uid.patch
+Patch11:    heimdal-1.4-passwd-check.patch
+Patch12:	heimdal-1.4-shared-libcom_err.patch
+Patch13:	heimdal-1.4-add-missing-linking-script.patch
 BuildRequires:  X11-devel
 BuildRequires:  db-devel >= 4.2.52
 BuildRequires:  flex
@@ -237,8 +236,7 @@ Contains the documentation covering functions etc. in the heimdal libraries
 %setup -q -n %{name}-%{version}
 %patch11 -p1 -b .passwd_check
 %patch12 -p1 -b .com_right_r
-%patch13 -p1 -b .openssl-1.0
-%patch14 -p1 -b .searchsambabyuid
+%patch13 -p1
 autoreconf
 
 %build
@@ -511,6 +509,7 @@ service xinetd condreload
 %attr(4755,root,root) %{_bindir}/ksu
 %{_sbindir}/kadmin
 %{_sbindir}/ktutil
+%{_sbindir}/digest-service
 %{_mandir}/man1/afslog.1*
 %{_mandir}/man1/ksu.1*
 # %{_mandir}/man1/kdigest.1*
