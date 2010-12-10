@@ -9,9 +9,9 @@ Release:    %mkrel 1
 Summary:    Heimdal implementation of Kerberos V5 system
 License:    BSD-like
 Group:      Networking/Other
-URL:        http://www.pdc.kth.se/heimdal/
-Source0:    ftp://ftp.pdc.kth.se/pub/heimdal/src/%{name}-%{version}.tar.bz2
-Source10:   ftp://ftp.pdc.kth.se/pub/heimdal/src/%{name}-%{version}.tar.gz.asc
+URL:        http://www.h5l.org
+Source0:    http://www.h5l.org/dist/src/heimdal-%{version}.tar.gz
+Source10:   http://www.h5l.org/dist/src/heimdal-%{version}.tar.gz.asc
 Source1:    %{name}.init
 #FIXME
 #Source2:   %{name}.logrotate
