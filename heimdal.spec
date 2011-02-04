@@ -1,11 +1,6 @@
-# Some underlinked bits still:
-#define _disable_ld_as_needed 1
-#define beta rc1
-#define _fortify_cflags %nil
-
 Name:       heimdal
 Version:    1.4
-Release:    %mkrel 1
+Release:    %mkrel 2
 Summary:    Heimdal implementation of Kerberos V5 system
 License:    BSD-like
 Group:      Networking/Other
@@ -24,8 +19,11 @@ Source8:    %{name}-kadmind.xinetd
 Patch11:    heimdal-1.4-passwd-check.patch
 Patch12:	heimdal-1.4-shared-libcom_err.patch
 Patch13:	heimdal-1.4-add-missing-linking-script.patch
-BuildRequires:  X11-devel
-BuildRequires:  db-devel >= 4.2.52
+Patch14:	heimdal-1.4-use-plain-cp-over-ln-for-manpage.patch
+BuildRequires:  libx11-devel
+BuildRequires:	libxau-devel
+BuildRequires:	libxt-devel
+BuildRequires:  db4-devel >= 4.2.52
 BuildRequires:  flex
 BuildRequires:  bison
 BuildRequires:  libtool
@@ -237,9 +235,10 @@ Contains the documentation covering functions etc. in the heimdal libraries
 %patch11 -p1 -b .passwd_check
 %patch12 -p1 -b .com_right_r
 %patch13 -p1
-autoreconf
+%patch14 -p0
 
 %build
+autoreconf -fi
 %serverbuild
 #   --sysconfdir=%{_sysconfdir}/%{name} \
 %configure2_5x \
@@ -292,6 +291,7 @@ touch %{buildroot}%{_localstatedir}/lib/%{name}/kadmind.acl
 # prevent some conflicts
 mv %{buildroot}/%{_mandir}/man1/su.1 %{buildroot}/%{_mandir}/man1/ksu.1
 mv %{buildroot}/%{_mandir}/cat1/su.1 %{buildroot}/%{_mandir}/cat1/ksu.1
+rm -f %{buildroot}%{_mandir}/*5/ftpusers.5*
 
 rm -f %{buildroot}%{_libdir}/lib{com_err,ss}.so
 rm -f %{buildroot}%{_includedir}/{glob,fnmatch,ss/ss}.h
@@ -368,10 +368,8 @@ service xinetd condreload
 %dir %{_localstatedir}/lib/%{name}
 %config(noreplace) %{_localstatedir}/lib/%{name}/kadmind.acl
 # %{_mandir}/*1/kimpersonate.1*
-%{_mandir}/cat8/kdigest.8.lzma
-%{_mandir}/cat8/kimpersonate.8.lzma
-%{_mandir}/man8/kdigest.8.lzma
-%{_mandir}/man8/kimpersonate.8.lzma
+%{_mandir}/*8/kdigest.8.*
+%{_mandir}/*8/kimpersonate.8.*
 %{_mandir}/*8/iprop.8*
 %{_mandir}/*8/iprop-log.8*
 %{_mandir}/man8/kstash.8*
@@ -461,8 +459,6 @@ service xinetd condreload
 %defattr(-,root,root)
 %config(noreplace) %{_sysconfdir}/xinetd.d/ftpd
 %{_sbindir}/ftpd
-%exclude %{_mandir}/man5/ftpusers.5*
-%exclude %{_mandir}/cat5/ftpusers.5*
 %{_mandir}/man8/ftpd.8*
 %{_mandir}/cat8/ftpd.8*
 
