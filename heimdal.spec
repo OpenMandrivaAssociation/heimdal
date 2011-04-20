@@ -1,6 +1,6 @@
 Name:       heimdal
 Version:    1.4
-Release:    %mkrel 2
+Release:    %mkrel 3
 Summary:    Heimdal implementation of Kerberos V5 system
 License:    BSD-like
 Group:      Networking/Other
@@ -23,7 +23,7 @@ Patch14:	heimdal-1.4-use-plain-cp-over-ln-for-manpage.patch
 BuildRequires:  libx11-devel
 BuildRequires:	libxau-devel
 BuildRequires:	libxt-devel
-BuildRequires:  db4-devel >= 4.2.52
+BuildRequires:  db-devel >= 4.2.52
 BuildRequires:  flex
 BuildRequires:  bison
 BuildRequires:  libtool
