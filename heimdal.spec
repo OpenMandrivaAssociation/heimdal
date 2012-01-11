@@ -1,6 +1,6 @@
 Name:       heimdal
 Version:    1.4
-Release:    %mkrel 3
+Release:    4
 Summary:    Heimdal implementation of Kerberos V5 system
 License:    BSD-like
 Group:      Networking/Other
@@ -20,6 +20,7 @@ Patch11:    heimdal-1.4-passwd-check.patch
 Patch12:	heimdal-1.4-shared-libcom_err.patch
 Patch13:	heimdal-1.4-add-missing-linking-script.patch
 Patch14:	heimdal-1.4-use-plain-cp-over-ln-for-manpage.patch
+Patch15:	heimdal-1.4-linux3.diff
 BuildRequires:  libx11-devel
 BuildRequires:	libxau-devel
 BuildRequires:	libxt-devel
@@ -36,11 +37,6 @@ BuildRequires:  texinfo
 BuildRequires:  sqlite3-devel
 #Required for tests/ldap
 BuildRequires:  openldap-servers
-BuildRoot:      %{_tmppath}/%{name}-%{version}
-
-%if %mdkversion <= 200710
-%define _libdir %{_prefix}/%{_lib}/%{name}
-%endif
 
 %description
 Heimdal is a free implementation of Kerberos 5. The goals are to:
@@ -70,9 +66,7 @@ Summary:    Kerberos Server
 Group:      System/Servers
 Requires:   %{name}-libs = %{version}-%{release}
 # krb5 package ships krb5.conf etc on mdv 2008.0 and later
-%if %mdkversion >= 200800
 Requires:   krb5
-%endif
 Requires(post): chkconfig
 Requires(preun):chkconfig
 Conflicts:  krb5-server
@@ -95,9 +89,7 @@ an LDAP server for storing the Heimdal database.
 %package libs
 Summary:    Heimdal shared libraries
 Group:      System/Libraries
-%if %mdkversion >= 200800
 Conflicts:  %{_lib}gssapi2
-%endif
 
 %description libs
 This package contains shared libraries required by several of the other heimdal
@@ -214,9 +206,6 @@ Group:      System/Libraries
 Requires:   %{name}-libs = %{version}-%{release}
 Conflicts:  libxmlrpc-devel
 Conflicts:  krb5-devel
-%if %mdkversion < 200800
-Conflicts:  gssapi-devel
-%endif
 
 %description devel
 contains files needed to compile and link software using the kerberos
@@ -236,6 +225,7 @@ Contains the documentation covering functions etc. in the heimdal libraries
 %patch12 -p1 -b .com_right_r
 %patch13 -p1
 %patch14 -p0
+%patch15 -p0
 
 %build
 autoreconf -fi
@@ -312,15 +302,15 @@ perl -pi -e 's|^#! ?/usr/pkg/bin/perl|#!%{_bindir}/perl|' \
 mv %{buildroot}%{_sbindir}/%{name}/* %{buildroot}%{_libdir}/%{name}
 rmdir %{buildroot}%{_sbindir}/%{name}
 
+# cleanups
+rm -f %{buildroot}%{_libdir}/*.*a
+
 %check
 %if %{?_with_test:1}%{!?_with_test:0}
 # For some reason this check fails partially just under rpm:
 perl -pi -e 's/check-iprop //g' tests/kdc/Makefile
 make -C tests check
 %endif
-
-%clean
-rm -rf %{buildroot}
 
 %pre server
 if [ -d %{_var}/%{name} ]; then
@@ -351,16 +341,7 @@ service xinetd condreload
 %postun telnetd
 service xinetd condreload
 
-%if %mdkversion < 200900
-%post libs -p /sbin/ldconfig
-%endif
-
-%if %mdkversion < 200900
-%postun libs -p /sbin/ldconfig
-%endif
-
 %files server
-%defattr(-,root,root)
 %doc NEWS TODO
 %{_initrddir}/%{name}
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
@@ -415,7 +396,6 @@ service xinetd condreload
 %endif
 
 %files libs
-%defattr(-,root,root)
 #%dir %{_sysconfdir}/%{name}
 #attr(400,root,root) %ghost %{_sysconfdir}/%{name}/krb5.keytab
 %attr(400,root,root) %ghost %{_sysconfdir}/krb5.keytab
@@ -427,7 +407,6 @@ service xinetd condreload
 %{_mandir}/cat8/kerberos.8*
 
 %files login
-%defattr(-,root,root)
 %{_bindir}/login
 %{_mandir}/man1/login.1*
 %{_mandir}/cat1/login.1*
@@ -435,13 +414,11 @@ service xinetd condreload
 %{_mandir}/cat5/login.access.5*
 
 %files ftp
-%defattr(-,root,root)
 %{_bindir}/ftp
 %{_mandir}/man1/ftp.1*
 %{_mandir}/cat1/ftp.1*
 
 %files rsh
-%defattr(-,root,root)
 %{_bindir}/rsh
 %{_bindir}/rcp
 %{_mandir}/man1/rsh.1*
@@ -450,34 +427,29 @@ service xinetd condreload
 %{_mandir}/cat1/rcp.1*
 
 %files telnet
-%defattr(-,root,root)
 %{_bindir}/telnet
 %{_mandir}/man1/telnet.1*
 %{_mandir}/cat1/telnet.1*
 
 %files ftpd
-%defattr(-,root,root)
 %config(noreplace) %{_sysconfdir}/xinetd.d/ftpd
 %{_sbindir}/ftpd
 %{_mandir}/man8/ftpd.8*
 %{_mandir}/cat8/ftpd.8*
 
 %files rshd
-%defattr(-,root,root)
 %config(noreplace) %{_sysconfdir}/xinetd.d/rshd
 %{_sbindir}/rshd
 %{_mandir}/man8/rshd.8*
 %{_mandir}/cat8/rshd.8*
 
 %files telnetd
-%defattr(-,root,root)
 %config(noreplace) %{_sysconfdir}/xinetd.d/telnetd
 %{_sbindir}/telnetd
 %{_mandir}/man8/telnetd.8*
 %{_mandir}/cat8/telnetd.8*
 
 %files workstation
-%defattr(-,root,root)
 %{_bindir}/afslog
 %{_bindir}/kauth
 %{_bindir}/kgetcred
@@ -557,7 +529,6 @@ service xinetd condreload
 %{_mandir}/cat8/ktutil.8*
 
 %files daemons
-%defattr(-,root,root)
 %{_sbindir}/popper
 %{_sbindir}/push
 %{_mandir}/man8/popper.8*
@@ -566,18 +537,14 @@ service xinetd condreload
 %{_mandir}/cat8/push.8*
 
 %files devel
-%defattr(-,root,root)
 %_bindir/heimdal-config
 %multiarch_bindir/heimdal-config
-%{_libdir}/lib*.la
 %{_libdir}/lib*.so
-%{_libdir}/windc.la
 %{_libdir}/windc.so
 %{_includedir}/*
 %{_libdir}/pkgconfig/heimdal-gssapi.pc
 
 %files devel-doc
-%defattr(-,root,root)
 %{_mandir}/man1/krb5-config.1*
 %{_mandir}/cat1/krb5-config.1*
 %{_mandir}/man3/*
