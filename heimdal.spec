@@ -1,6 +1,6 @@
 Name:       heimdal
-Version:    1.4
-Release:    4
+Version:    1.5.2
+Release:    1
 Summary:    Heimdal implementation of Kerberos V5 system
 License:    BSD-like
 Group:      Networking/Other
@@ -17,10 +17,6 @@ Source6:    %{name}-rshd.xinetd
 Source7:    %{name}-telnetd.xinetd
 Source8:    %{name}-kadmind.xinetd
 Patch11:    heimdal-1.4-passwd-check.patch
-Patch12:	heimdal-1.4-shared-libcom_err.patch
-Patch13:	heimdal-1.4-add-missing-linking-script.patch
-Patch14:	heimdal-1.4-use-plain-cp-over-ln-for-manpage.patch
-Patch15:	heimdal-1.4-linux3.diff
 BuildRequires:  libx11-devel
 BuildRequires:	libxau-devel
 BuildRequires:	libxt-devel
@@ -32,7 +28,6 @@ BuildRequires:  ncurses-devel >= 5.3
 BuildRequires:  openldap-devel >= 2.0
 BuildRequires:  readline-devel termcap-devel
 BuildRequires:  pam-devel
-BuildRequires:  e2fsprogs-devel
 BuildRequires:  texinfo
 BuildRequires:  sqlite3-devel
 #Required for tests/ldap
@@ -222,10 +217,6 @@ Contains the documentation covering functions etc. in the heimdal libraries
 %prep
 %setup -q -n %{name}-%{version}
 %patch11 -p1 -b .passwd_check
-%patch12 -p1 -b .com_right_r
-%patch13 -p1
-%patch14 -p0
-%patch15 -p0
 
 %build
 autoreconf -fi
@@ -410,8 +401,6 @@ service xinetd condreload
 %{_bindir}/login
 %{_mandir}/man1/login.1*
 %{_mandir}/cat1/login.1*
-%{_mandir}/man5/login.access.5*
-%{_mandir}/cat5/login.access.5*
 
 %files ftp
 %{_bindir}/ftp
@@ -451,7 +440,6 @@ service xinetd condreload
 
 %files workstation
 %{_bindir}/afslog
-%{_bindir}/kauth
 %{_bindir}/kgetcred
 %{_bindir}/kx
 %{_bindir}/pfrom
@@ -467,8 +455,9 @@ service xinetd condreload
 %{_bindir}/kinit
 %{_bindir}/klist
 %{_bindir}/kpasswd
+%{_bindir}/gsstool
+%{_bindir}/kcc
 %{_bindir}/pagsh
-%{_bindir}/gss
 %{_bindir}/hxtool
 %{_bindir}/idn-lookup
 %{_bindir}/kswitch
@@ -497,6 +486,8 @@ service xinetd condreload
 %{_mandir}/man1/rxterm.1*
 %{_mandir}/man1/tenletxr.1*
 %{_mandir}/man1/xnlock.1*
+%{_mandir}/man5/krb5.conf.5.*
+%{_mandir}/man5/login.access.5.*
 %{_mandir}/cat1/kdestroy.1*
 %{_mandir}/cat1/kgetcred.1*
 %{_mandir}/cat1/klist.1*
@@ -516,10 +507,7 @@ service xinetd condreload
 %{_mandir}/cat1/rxterm.1*
 %{_mandir}/cat1/tenletxr.1*
 %{_mandir}/cat1/xnlock.1*
-%{_mandir}/man5/krb5.conf.5*
-%{_mandir}/man5/qop.5.*
 %{_mandir}/man5/mech.5*
-%{_mandir}/cat5/krb5.conf.5*
 %{_mandir}/*8/verify_krb5_conf.8*
 %{_mandir}/man8/string2key.8*
 %{_mandir}/man8/kadmin.8*
