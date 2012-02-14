@@ -1,6 +1,6 @@
 Name:       heimdal
 Version:    1.5.2
-Release:    1
+Release:    2
 Summary:    Heimdal implementation of Kerberos V5 system
 License:    BSD-like
 Group:      Networking/Other
@@ -201,6 +201,7 @@ Group:      System/Libraries
 Requires:   %{name}-libs = %{version}-%{release}
 Conflicts:  libxmlrpc-devel
 Conflicts:  krb5-devel
+Conflicts:  ext2fs-devel
 
 %description devel
 contains files needed to compile and link software using the kerberos
