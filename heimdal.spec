@@ -1,6 +1,6 @@
 Name:       heimdal
 Version:    1.5.2
-Release:    2
+Release:    3
 Summary:    Heimdal implementation of Kerberos V5 system
 License:    BSD-like
 Group:      Networking/Other
@@ -32,6 +32,8 @@ BuildRequires:  texinfo
 BuildRequires:  sqlite3-devel
 #Required for tests/ldap
 BuildRequires:  openldap-servers
+
+%define _requires_exceptions devel(libcom_err
 
 %description
 Heimdal is a free implementation of Kerberos 5. The goals are to:
