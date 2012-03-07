@@ -1,37 +1,37 @@
-Name:       heimdal
-Version:    1.5.2
-Release:    3
-Summary:    Heimdal implementation of Kerberos V5 system
-License:    BSD-like
-Group:      Networking/Other
-URL:        http://www.h5l.org
-Source0:    http://www.h5l.org/dist/src/heimdal-%{version}.tar.gz
-Source10:   http://www.h5l.org/dist/src/heimdal-%{version}.tar.gz.asc
-Source1:    %{name}.init
+Name:		heimdal
+Version:	1.5.2
+Release:	3
+Summary:	Heimdal implementation of Kerberos V5 system
+License:	BSD-like
+Group:		Networking/Other
+URL:		http://www.h5l.org
+Source0:	http://www.h5l.org/dist/src/heimdal-%{version}.tar.gz
+Source10:	http://www.h5l.org/dist/src/heimdal-%{version}.tar.gz.asc
+Source1:	%{name}.init
 #FIXME
-#Source2:   %{name}.logrotate
-Source3:    %{name}.sysconfig
-#Source4:   %{name}-krb5.conf
-Source5:    %{name}-ftpd.xinetd
-Source6:    %{name}-rshd.xinetd
-Source7:    %{name}-telnetd.xinetd
-Source8:    %{name}-kadmind.xinetd
-Patch11:    heimdal-1.4-passwd-check.patch
-BuildRequires:  libx11-devel
+#Source2:	%{name}.logrotate
+Source3:	%{name}.sysconfig
+#Source4:	%{name}-krb5.conf
+Source5:	%{name}-ftpd.xinetd
+Source6:	%{name}-rshd.xinetd
+Source7:	%{name}-telnetd.xinetd
+Source8:	%{name}-kadmind.xinetd
+Patch11:	heimdal-1.4-passwd-check.patch
+BuildRequires:	libx11-devel
 BuildRequires:	libxau-devel
 BuildRequires:	libxt-devel
-BuildRequires:  db-devel >= 4.2.52
-BuildRequires:  flex
-BuildRequires:  bison
-BuildRequires:  libtool
-BuildRequires:  ncurses-devel >= 5.3
-BuildRequires:  openldap-devel >= 2.0
-BuildRequires:  readline-devel termcap-devel
-BuildRequires:  pam-devel
-BuildRequires:  texinfo
-BuildRequires:  sqlite3-devel
+BuildRequires:	db-devel >= 4.2.52
+BuildRequires:	flex
+BuildRequires:	bison
+BuildRequires:	libtool
+BuildRequires:	ncurses-devel >= 5.3
+BuildRequires:	openldap-devel >= 2.0
+BuildRequires:	readline-devel termcap-devel
+BuildRequires:	pam-devel
+BuildRequires:	texinfo
+BuildRequires:	sqlite3-devel
 #Required for tests/ldap
-BuildRequires:  openldap-servers
+BuildRequires:	openldap-servers
 
 %define _requires_exceptions devel(libcom_err
 
@@ -47,178 +47,178 @@ Heimdal is a free implementation of Kerberos 5. The goals are to:
    - include enough backwards compatibility with Kerberos V4
    - IPv6 support
 
-%package workstation
-Summary:    Kerberos programs for use on workstations
-Group:      Networking/Other
-Requires:   %{name}-libs = %{version}-%{release}
-Conflicts:  krb5-workstation
-Provides:   kerberos-workstation
-Obsoletes:  %{name}
+%package	workstation
+Summary:	Kerberos programs for use on workstations
+Group:		Networking/Other
+Requires:	%{name}-libs = %{version}-%{release}
+Conflicts:	krb5-workstation
+Provides:	kerberos-workstation
+Obsoletes:	%{name}
 
-%description workstation
+%description	workstation
 This package contains Kerberos 5 programs for use on workstations.
 
-%package server
-Summary:    Kerberos Server
-Group:      System/Servers
-Requires:   %{name}-libs = %{version}-%{release}
+%package	server
+Summary:	Kerberos Server
+Group:		System/Servers
+Requires:	%{name}-libs = %{version}-%{release}
 # krb5 package ships krb5.conf etc on mdv 2008.0 and later
-Requires:   krb5
-Requires(post): chkconfig
+Requires:	krb5
+Requires(post):	chkconfig
 Requires(preun):chkconfig
-Conflicts:  krb5-server
+Conflicts:	krb5-server
 
-%description server
+%description	server
 This package contains the master KDC.
 
 # Not working right yet
 %if 0
-%package hdb_ldap
-Summary:    Kerberos Server LDAP Backend
-Group:      System/Servers
-Requires:   %{name}-server = %{version}-%{release}
+%package	hdb_ldap
+Summary:	Kerberos Server LDAP Backend
+Group:		System/Servers
+Requires:	%{name}-server = %{version}-%{release}
 
-%description hdb_ldap
+%description	hdb_ldap
 This package contains the LDAP HDB backend plugin, which allows the use of
 an LDAP server for storing the Heimdal database.
 %endif
 
-%package libs
-Summary:    Heimdal shared libraries
-Group:      System/Libraries
-Conflicts:  %{_lib}gssapi2
+%package	libs
+Summary:	Heimdal shared libraries
+Group:		System/Libraries
+Conflicts:	%{_lib}gssapi2
 
-%description libs
+%description	libs
 This package contains shared libraries required by several of the other heimdal
 packages.
 
-%package login
-Summary:    Used when signing onto a system
-Group:      Networking/Other
-Requires:   %{name}-libs = %{version}-%{release}
-Provides:   login
-Conflicts:  util-linux shadow-utils
+%package	login
+Summary:	Used when signing onto a system
+Group:		Networking/Other
+Requires:	%{name}-libs = %{version}-%{release}
+Provides:	login
+Conflicts:	util-linux shadow-utils
 
-%description login
+%description	login
 login is used when signing onto a system. It can also be used to
 switch from one user to another at any time (most modern shells have
 support for this feature built into them, however). This package
 contain kerberized version login program.
 
-%package ftp
-Summary:    The standard UNIX FTP (file transfer protocol) client
-Group:      Networking/Other
-Requires:   %{name}-libs = %{version}-%{release}
-Conflicts:  ftp-client-krb5
+%package	ftp
+Summary:	The standard UNIX FTP (file transfer protocol) client
+Group:		Networking/Other
+Requires:	%{name}-libs = %{version}-%{release}
+Conflicts:	ftp-client-krb5
 
-%description ftp
+%description	ftp
 The ftp package provides the standard UNIX command-line FTP client
 with kerberos authentication support. FTP is the file transfer
 protocol, which is a widely used Internet protocol for transferring
 files and for archiving files.
 
-%package rsh
-Summary:    Clients for remote access commands (rsh, rlogin, rcp)
-Group:      Networking/Other
-Requires:   %{name}-libs = %{version}-%{release}
+%package	rsh
+Summary:	Clients for remote access commands (rsh, rlogin, rcp)
+Group:		Networking/Other
+Requires:	%{name}-libs = %{version}-%{release}
 
-%description rsh
+%description	rsh
 The rsh package contains a set of programs which allow users to run
 commands on remote machines, login to other machines and copy files
 between machines (rsh, rlogin and rcp). All three of these commands
 use rhosts style authentication. This package contains the clients
 needed for all of these services.
 
-%package telnet
-Summary:    Client for the telnet remote login
-Group:      Networking/Other
-Requires:   %{name}-libs = %{version}-%{release}
-Conflicts:  krb5-appl-clients
-Conflicts:  netkit-telnet
-Provides:   telnet-client
+%package	telnet
+Summary:	Client for the telnet remote login
+Group:		Networking/Other
+Requires:	%{name}-libs = %{version}-%{release}
+Conflicts:	krb5-appl-clients
+Conflicts:	netkit-telnet
+Provides:	telnet-client
 
-%description telnet
+%description	telnet
 Telnet is a popular protocol for remote logins across the Internet.
 This package provides a command line telnet client.
 
-%package ftpd
-Summary:    The standard UNIX FTP (file transfer protocol) server
-Group:      System/Servers
-Requires(pre):  xinetd
-Requires:       %{name}-libs = %{version}-%{release}
-Conflicts:      ftp-server-krb5
+%package	ftpd
+Summary:	The standard UNIX FTP (file transfer protocol) server
+Group:		System/Servers
+Requires(pre):	xinetd
+Requires:	%{name}-libs = %{version}-%{release}
+Conflicts:	ftp-server-krb5
 
-%description ftpd
+%description	ftpd
 FTP is the file transfer protocol, which is a widely used Internet
 protocol for transferring files and for archiving files.
 
-%package rshd
-Summary:    Server for remote access commands (rsh, rlogin, rcp)
-Group:      System/Servers
-Requires(pre):  xinetd
-Requires:       %{name}-libs = %{version}-%{release}
+%package	rshd
+Summary:	Server for remote access commands (rsh, rlogin, rcp)
+Group:		System/Servers
+Requires(pre):	xinetd
+Requires:	%{name}-libs = %{version}-%{release}
 
-%description rshd
+%description	rshd
 The rsh package contains a set of programs which allow users to run
 commmands on remote machines, login to other machines and copy files
 between machines (rsh, rlogin and rcp). All three of these commands
 use rhosts style authentication. This package contains servers needed
 for all of these services.
 
-%package telnetd
-Summary:    Server for the telnet remote login
-Group:      System/Servers
-Requires(pre):  xinetd
-Requires:       %{name}-libs = %{version}-%{release}
-Conflicts:  krb5-appl-servers
-Conflicts:  netkit-telnet-server
-Provides:   telnet-server
+%package	telnetd
+Summary:	Server for the telnet remote login
+Group:		System/Servers
+Requires(pre):	xinetd
+Requires:	%{name}-libs = %{version}-%{release}
+Conflicts:	krb5-appl-servers
+Conflicts:	netkit-telnet-server
+Provides:	telnet-server
 
-%description telnetd
+%description	telnetd
 Telnet is a popular protocol for remote logins across the Internet.
 This package provides a telnet daemon which allows remote logins into
 the machine it is running on.
 
 %if 0
-%package clients
-Summary:    Kerberos programs for use on workstations
-Group:      Networking/Other
-Requires:   %{name}-libs = %{version}-%{release}
+%package	clients
+Summary:	Kerberos programs for use on workstations
+Group:		Networking/Other
+Requires:	%{name}-libs = %{version}-%{release}
 
-%description clients
+%description	clients
 Kerberos 5 Clients.
 %endif
 
-%package daemons
-Summary:    Kerberos daemons programs for use on servers
-Group:      System/Servers
-Requires:   %{name}-libs = %{version}-%{release}
+%package	daemons
+Summary:	Kerberos daemons programs for use on servers
+Group:		System/Servers
+Requires:	%{name}-libs = %{version}-%{release}
 
-%description daemons
+%description	daemons
 Kerberos Daemons.
 
-%package devel
-Summary:    Header files for heimdal
-Group:      System/Libraries
-Requires:   %{name}-libs = %{version}-%{release}
-Conflicts:  libxmlrpc-devel
-Conflicts:  krb5-devel
-Conflicts:  ext2fs-devel
+%package	devel
+Summary:	Header files for heimdal
+Group:		System/Libraries
+Requires:	%{name}-libs = %{version}-%{release}
+Conflicts:	libxmlrpc-devel
+Conflicts:	krb5-devel
+Conflicts:	ext2fs-devel
 
-%description devel
+%description	devel
 contains files needed to compile and link software using the kerberos
 libraries.
 
-%package devel-doc
-Summary:    Developer documentation for heimdal
-Group:      System/Libraries
-Conflicts:  heimdal-devel <= 1.0.1-4
+%package	devel-doc
+Summary:	Developer documentation for heimdal
+Group:		System/Libraries
+Conflicts:	heimdal-devel <= 1.0.1-4
 
-%description devel-doc
+%description	devel-doc
 Contains the documentation covering functions etc. in the heimdal libraries
 
 %prep
-%setup -q -n %{name}-%{version}
+%setup -q
 %patch11 -p1 -b .passwd_check
 
 %build
@@ -529,8 +529,8 @@ service xinetd condreload
 %{_mandir}/cat8/push.8*
 
 %files devel
-%_bindir/heimdal-config
-%multiarch_bindir/heimdal-config
+%{_bindir}/heimdal-config
+%{multiarch_bindir}/heimdal-config
 %{_libdir}/lib*.so
 %{_libdir}/windc.so
 %{_includedir}/*
