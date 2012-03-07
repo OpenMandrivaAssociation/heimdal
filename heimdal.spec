@@ -222,7 +222,6 @@ Contains the documentation covering functions etc. in the heimdal libraries
 %patch11 -p1 -b .passwd_check
 
 %build
-autoreconf -fi
 %serverbuild
 #   --sysconfdir=%{_sysconfdir}/%{name} \
 %configure2_5x \
