@@ -295,8 +295,7 @@ perl -pi -e 's|^#! ?/usr/pkg/bin/perl|#!%{_bindir}/perl|' \
     %{buildroot}%{_datadir}/%{name}/*.pl
 
 # stuff installed there because of libexecdir redefinition
-mv %{buildroot}%{_sbindir}/%{name}/* %{buildroot}%{_libdir}/%{name}
-rmdir %{buildroot}%{_sbindir}/%{name}
+mv %{buildroot}%{_sbindir}/%{name} %{buildroot}%{_libdir}
 
 # cleanups
 rm -f %{buildroot}%{_libdir}/*.*a
