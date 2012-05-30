@@ -250,7 +250,6 @@ make
 %make -C doc html
 
 %install
-rm -rf %{buildroot}
 install -d %{buildroot}%{_localstatedir}/lib/%{name}
 #install -d %{buildroot}%{_sysconfdir}/%{name}
 
