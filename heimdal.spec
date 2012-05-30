@@ -1,6 +1,6 @@
 Name:		heimdal
 Version:	1.5.2
-Release:	3
+Release:	4
 Summary:	Heimdal implementation of Kerberos V5 system
 License:	BSD-like
 Group:		Networking/Other
@@ -110,6 +110,7 @@ Summary:	The standard UNIX FTP (file transfer protocol) client
 Group:		Networking/Other
 Requires:	%{name}-libs = %{version}-%{release}
 Conflicts:	ftp-client-krb5
+Provides:	ftp-client
 
 %description	ftp
 The ftp package provides the standard UNIX command-line FTP client
@@ -121,6 +122,7 @@ files and for archiving files.
 Summary:	Clients for remote access commands (rsh, rlogin, rcp)
 Group:		Networking/Other
 Requires:	%{name}-libs = %{version}-%{release}
+Provides:	rsh-client
 
 %description	rsh
 The rsh package contains a set of programs which allow users to run
@@ -147,6 +149,7 @@ Group:		System/Servers
 Requires(pre):	xinetd
 Requires:	%{name}-libs = %{version}-%{release}
 Conflicts:	ftp-server-krb5
+Provides:	ftp-server
 
 %description	ftpd
 FTP is the file transfer protocol, which is a widely used Internet
@@ -157,6 +160,7 @@ Summary:	Server for remote access commands (rsh, rlogin, rcp)
 Group:		System/Servers
 Requires(pre):	xinetd
 Requires:	%{name}-libs = %{version}-%{release}
+Provides:	rsh-server
 
 %description	rshd
 The rsh package contains a set of programs which allow users to run
