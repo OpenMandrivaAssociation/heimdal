@@ -447,7 +447,6 @@ service xinetd condreload
 %{_bindir}/kgetcred
 %{_bindir}/kx
 %{_bindir}/pfrom
-%{_bindir}/compile_et
 %{_bindir}/rxtelnet
 %{_bindir}/rxterm
 %{_bindir}/string2key
