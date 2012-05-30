@@ -54,7 +54,7 @@ Heimdal is a free implementation of Kerberos 5. The goals are to:
 %package	workstation
 Summary:	Kerberos programs for use on workstations
 Group:		Networking/Other
-Requires:	%{name}-libs = %{version}-%{release}
+Requires:	%{name}-libs = %{EVRD}
 Conflicts:	krb5-workstation
 Provides:	kerberos-workstation
 Obsoletes:	%{name}
@@ -65,7 +65,7 @@ This package contains Kerberos 5 programs for use on workstations.
 %package	server
 Summary:	Kerberos Server
 Group:		System/Servers
-Requires:	%{name}-libs = %{version}-%{release}
+Requires:	%{name}-libs = %{EVRD}
 # krb5 package ships krb5.conf etc on mdv 2008.0 and later
 Requires:	krb5
 Requires(post):	chkconfig
@@ -80,7 +80,7 @@ This package contains the master KDC.
 %package	hdb_ldap
 Summary:	Kerberos Server LDAP Backend
 Group:		System/Servers
-Requires:	%{name}-server = %{version}-%{release}
+Requires:	%{name}-server = %{EVRD}
 
 %description	hdb_ldap
 This package contains the LDAP HDB backend plugin, which allows the use of
@@ -99,7 +99,7 @@ packages.
 %package	login
 Summary:	Used when signing onto a system
 Group:		Networking/Other
-Requires:	%{name}-libs = %{version}-%{release}
+Requires:	%{name}-libs = %{EVRD}
 Provides:	login
 Conflicts:	util-linux shadow-utils
 
@@ -112,7 +112,7 @@ contain kerberized version login program.
 %package	ftp
 Summary:	The standard UNIX FTP (file transfer protocol) client
 Group:		Networking/Other
-Requires:	%{name}-libs = %{version}-%{release}
+Requires:	%{name}-libs = %{EVRD}
 Conflicts:	ftp-client-krb5
 Provides:	ftp-client
 
@@ -125,7 +125,7 @@ files and for archiving files.
 %package	rsh
 Summary:	Clients for remote access commands (rsh, rlogin, rcp)
 Group:		Networking/Other
-Requires:	%{name}-libs = %{version}-%{release}
+Requires:	%{name}-libs = %{EVRD}
 Provides:	rsh-client
 
 %description	rsh
@@ -138,7 +138,7 @@ needed for all of these services.
 %package	telnet
 Summary:	Client for the telnet remote login
 Group:		Networking/Other
-Requires:	%{name}-libs = %{version}-%{release}
+Requires:	%{name}-libs = %{EVRD}
 Conflicts:	krb5-appl-clients
 Conflicts:	netkit-telnet
 Provides:	telnet-client
@@ -151,7 +151,7 @@ This package provides a command line telnet client.
 Summary:	The standard UNIX FTP (file transfer protocol) server
 Group:		System/Servers
 Requires(pre):	xinetd
-Requires:	%{name}-libs = %{version}-%{release}
+Requires:	%{name}-libs = %{EVRD}
 Conflicts:	ftp-server-krb5
 Provides:	ftp-server
 
@@ -163,7 +163,7 @@ protocol for transferring files and for archiving files.
 Summary:	Server for remote access commands (rsh, rlogin, rcp)
 Group:		System/Servers
 Requires(pre):	xinetd
-Requires:	%{name}-libs = %{version}-%{release}
+Requires:	%{name}-libs = %{EVRD}
 Provides:	rsh-server
 
 %description	rshd
@@ -177,7 +177,7 @@ for all of these services.
 Summary:	Server for the telnet remote login
 Group:		System/Servers
 Requires(pre):	xinetd
-Requires:	%{name}-libs = %{version}-%{release}
+Requires:	%{name}-libs = %{EVRD}
 Conflicts:	krb5-appl-servers
 Conflicts:	netkit-telnet-server
 Provides:	telnet-server
@@ -191,7 +191,7 @@ the machine it is running on.
 %package	clients
 Summary:	Kerberos programs for use on workstations
 Group:		Networking/Other
-Requires:	%{name}-libs = %{version}-%{release}
+Requires:	%{name}-libs = %{EVRD}
 
 %description	clients
 Kerberos 5 Clients.
@@ -200,7 +200,7 @@ Kerberos 5 Clients.
 %package	daemons
 Summary:	Kerberos daemons programs for use on servers
 Group:		System/Servers
-Requires:	%{name}-libs = %{version}-%{release}
+Requires:	%{name}-libs = %{EVRD}
 
 %description	daemons
 Kerberos Daemons.
@@ -208,7 +208,7 @@ Kerberos Daemons.
 %package	devel
 Summary:	Header files for heimdal
 Group:		System/Libraries
-Requires:	%{name}-libs = %{version}-%{release}
+Requires:	%{name}-libs = %{EVRD}
 Conflicts:	libxmlrpc-devel
 Conflicts:	krb5-devel
 Conflicts:	ext2fs-devel
