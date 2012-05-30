@@ -262,15 +262,15 @@ install -d %{buildroot}%{_localstatedir}/lib/%{name}
 install appl/su/.libs/su %{buildroot}%{_bindir}/ksu
 #install %{SOURCE4} %{buildroot}%{_sysconfdir}/krb5.conf
 
-install -D -m 755 %{SOURCE1} %{buildroot}%{_initrddir}/%{name}
-install -D -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/sysconfig/%{name}
-# FIXME install %{SOURCE2} %{buildroot}/etc/logrotate.d/%{name}
-# FIXME install %{SOURCE3} %{buildroot}/etc/sysconfig/%{name}
+install -m755 %{SOURCE1} -D %{buildroot}%{_initrddir}/%{name}
+install -m644 %{SOURCE3} -D %{buildroot}%{_sysconfdir}/sysconfig/%{name}
+# FIXME install %{SOURCE2} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
+# FIXME install %{SOURCE3} %{buildroot}%{_sysconfdir}/sysconfig/%{name}
 
-install -D -m 644 %{SOURCE5} %{buildroot}%{_sysconfdir}/xinetd.d/ftpd
-install -m 644 %{SOURCE6} %{buildroot}%{_sysconfdir}/xinetd.d/rshd
-install -m 644 %{SOURCE7} %{buildroot}%{_sysconfdir}/xinetd.d/telnetd
-install -m 644 %{SOURCE8} %{buildroot}%{_sysconfdir}/xinetd.d/kadmind
+install -m644 %{SOURCE5} -D %{buildroot}%{_sysconfdir}/xinetd.d/ftpd
+install -m644 %{SOURCE6} -D %{buildroot}%{_sysconfdir}/xinetd.d/rshd
+install -m644 %{SOURCE7} -D %{buildroot}%{_sysconfdir}/xinetd.d/telnetd
+install -m644 %{SOURCE8} -D %{buildroot}%{_sysconfdir}/xinetd.d/kadmind
 
 chmod +r %{buildroot}%{_bindir}/otp   # qrde dlaczego to ma chmod 0
 
@@ -279,8 +279,8 @@ touch %{buildroot}%{_sysconfdir}/krb5.keytab
 touch %{buildroot}%{_localstatedir}/lib/%{name}/kadmind.acl
 
 # prevent some conflicts
-mv %{buildroot}/%{_mandir}/man1/su.1 %{buildroot}/%{_mandir}/man1/ksu.1
-mv %{buildroot}/%{_mandir}/cat1/su.1 %{buildroot}/%{_mandir}/cat1/ksu.1
+mv %{buildroot}%{_mandir}/man1/su.1 %{buildroot}%{_mandir}/man1/ksu.1
+mv %{buildroot}%{_mandir}/cat1/su.1 %{buildroot}%{_mandir}/cat1/ksu.1
 rm -f %{buildroot}%{_mandir}/*5/ftpusers.5*
 
 rm -f %{buildroot}%{_libdir}/lib{com_err,ss}.so
@@ -288,13 +288,12 @@ rm -f %{buildroot}%{_includedir}/{glob,fnmatch,ss/ss}.h
 rm -f %{buildroot}%{_bindir}/mk_cmds
 
 # see if we can avoid conflicting with krb5-devel
-mv %{buildroot}/%{_bindir}/krb5-config %{buildroot}/%{_bindir}/heimdal-config
-%multiarch_binaries %{buildroot}/%{_bindir}/heimdal-config
+mv %{buildroot}%{_bindir}/krb5-config %{buildroot}%{_bindir}/heimdal-config
+%multiarch_binaries %{buildroot}%{_bindir}/heimdal-config
 
 # utils
-install -d -m 755 %{buildroot}%{_datadir}/%{name}
-install -m 755 tools/kdc-log-analyze.pl %{buildroot}%{_datadir}/%{name}
-install -m 755 lib/kadm5/check-cracklib.pl %{buildroot}%{_datadir}/%{name}
+install -m755 tools/kdc-log-analyze.pl -D %{buildroot}%{_datadir}/%{name}/kdc-log-analyze.pl
+install -m755 lib/kadm5/check-cracklib.pl -D %{buildroot}%{_datadir}/%{name}/check-cracklib.pl
 perl -pi -e 's|^#! ?/usr/pkg/bin/perl|#!%{_bindir}/perl|' \
     %{buildroot}%{_datadir}/%{name}/*.pl
 
