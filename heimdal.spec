@@ -263,7 +263,7 @@ install appl/su/.libs/su %{buildroot}%{_bindir}/ksu
 #install %{SOURCE4} %{buildroot}%{_sysconfdir}/krb5.conf
 
 install -D -m 755 %{SOURCE1} %{buildroot}%{_initrddir}/%{name}
-install -D -m 755 %{SOURCE3} %{buildroot}%{_sysconfdir}/sysconfig/%{name}
+install -D -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/sysconfig/%{name}
 # FIXME install %{SOURCE2} %{buildroot}/etc/logrotate.d/%{name}
 # FIXME install %{SOURCE3} %{buildroot}/etc/sysconfig/%{name}
 
