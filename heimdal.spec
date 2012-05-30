@@ -33,7 +33,11 @@ BuildRequires:	sqlite3-devel
 #Required for tests/ldap
 BuildRequires:	openldap-servers
 
+%if %{_use_internal_dependency_generator}
+%define __noautoreq 'devel\(libcom_err.*\)'
+%else
 %define _requires_exceptions devel(libcom_err
+%endif
 
 %description
 Heimdal is a free implementation of Kerberos 5. The goals are to:
