@@ -1,0 +1,9 @@
+sources:
+  "heimdal-1.5.2.tar.gz:"	dd0920a181d18236432e4b3e5eab6e468cda4b89
+  "heimdal-1.5.2.tar.gz.asc:"	72ab553fcbca09e22d252eaed3de4cb41d2563a1
+  "heimdal-ftpd.xinetd:"	bd40cf61c488f13b22aea10584ab66fdc39ab10a
+  "heimdal.init:"	23781e50c1f1acd5b9870702f2bc6e1c93ef4ff6
+  "heimdal-kadmind.xinetd:"	b7c766d8a13bc8fdee3971a0dd97c5b9588589cf
+  "heimdal-rshd.xinetd:"	9885485e8d1d64820adcf89db94cc0658249387c
+  "heimdal.sysconfig:"	b9243503cc0d33ce06f6d6319d4acf08d4b5b779
+  "heimdal-telnetd.xinetd:"	7c0d96df063675d35255a97957cc1922c6979784
