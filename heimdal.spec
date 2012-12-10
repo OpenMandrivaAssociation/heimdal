@@ -1,6 +1,6 @@
 Name:		heimdal
 Version:	1.5.2
-Release:	4
+Release:	5
 Summary:	Heimdal implementation of Kerberos V5 system
 License:	BSD-like
 Group:		Networking/Other
@@ -17,14 +17,14 @@ Source6:	%{name}-rshd.xinetd
 Source7:	%{name}-telnetd.xinetd
 Source8:	%{name}-kadmind.xinetd
 Patch11:	heimdal-1.4-passwd-check.patch
-BuildRequires:	libx11-devel
-BuildRequires:	libxau-devel
-BuildRequires:	libxt-devel
+BuildRequires:	pkgconfig(x11)
+BuildRequires:	pkgconfig(xau)
+BuildRequires:	pkgconfig(xt)
 BuildRequires:	db-devel >= 4.2.52
 BuildRequires:	flex
 BuildRequires:	bison
 BuildRequires:	libtool
-BuildRequires:	ncurses-devel >= 5.3
+BuildRequires:	pkgconfig(ncurses)
 BuildRequires:	openldap-devel >= 2.0
 BuildRequires:	readline-devel termcap-devel
 BuildRequires:	pam-devel
@@ -34,7 +34,7 @@ BuildRequires:	sqlite3-devel
 BuildRequires:	openldap-servers
 
 %if %{_use_internal_dependency_generator}
-%define __noautoreq 'devel\(libcom_err.*\)'
+%define __noautoreq 'devel\\(libcom_err(.*)\\)'
 %else
 %define _requires_exceptions devel(libcom_err
 %endif
@@ -57,7 +57,7 @@ Group:		Networking/Other
 Requires:	%{name}-libs = %{EVRD}
 Conflicts:	krb5-workstation
 Provides:	kerberos-workstation
-Obsoletes:	%{name}
+Obsoletes:	%{name} < %{EVRD}
 
 %description	workstation
 This package contains Kerberos 5 programs for use on workstations.
@@ -545,3 +545,308 @@ service xinetd condreload
 %{_mandir}/cat1/krb5-config.1*
 %{_mandir}/man3/*
 %{_mandir}/cat3/*
+
+
+%changelog
+* Wed May 30 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1.5.2-4
++ Revision: 801363
+- add back compile_et
+- use %%{EVRD} macro
+- cosmetics
+- fix executable-marked-as-config-file
+- fix dependency filter usage with internal dependency generator
+- %{_bindir}/compile_et is no longer built
+- fix moving of files to %%{_libdir}/%%{name}
+- ditch buildroot cleaning
+- add 'ftp-client', 'rsh-client', 'rsh-server' & 'ftp-server' to provides
+- don't run autoconf
+- cleanups
+
+* Wed Feb 15 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1.5.2-3
++ Revision: 774145
+- don't generate dependency on devel(libcom_err
+
+* Tue Feb 14 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1.5.2-2
++ Revision: 774109
+- add a conflict on ext2fs-devel for devel package
+
+* Thu Jan 12 2012 Alexander Khrukin <akhrukin@mandriva.org> 1.5.2-1
++ Revision: 760381
+- forgotten binary
+- version update  1.5.2
+
+  + Oden Eriksson <oeriksson@mandriva.com>
+    - P15: fix threading if the build host uses kernel 3.x
+    - various cleanups
+
+  + Bogdano Arendartchuk <bogdano@mandriva.com>
+    - build with db 5.1 (from fwang | 2011-04-12 11:00:31)
+
+* Fri Feb 04 2011 Funda Wang <fwang@mandriva.org> 1.4-2
++ Revision: 635966
+- use symbolic link rather than hardlink for manpages
+- tighten BR
+- add correct source
+
+  + Buchan Milne <bgmilne@mandriva.org>
+    - Update URLs
+
+* Wed Sep 15 2010 Guillaume Rousse <guillomovitch@mandriva.org> 1.4-1mdv2011.0
++ Revision: 578761
+- new version
+
+* Sat Jul 17 2010 Guillaume Rousse <guillomovitch@mandriva.org> 1.3.3-1mdv2011.0
++ Revision: 554618
+- update to new version 1.3.3
+
+* Tue May 11 2010 Buchan Milne <bgmilne@mandriva.org> 1.3.2-3mdv2010.1
++ Revision: 544535
+- Search samba accounts by filtering on uid equal to userid, not princname
+
+* Wed Apr 28 2010 Guillaume Rousse <guillomovitch@mandriva.org> 1.3.2-2mdv2010.1
++ Revision: 540281
+- fix build with openssl 1.0
+- add telnet-server and telnet-client virtual packages
+- conflict with other telnet packages
+
+* Fri Mar 26 2010 Guillaume Rousse <guillomovitch@mandriva.org> 1.3.2-1mdv2010.1
++ Revision: 527600
+- new version
+
+* Sun Feb 14 2010 Buchan Milne <bgmilne@mandriva.org> 1.3.1-4mdv2010.1
++ Revision: 505977
+- Use system libcom_err again (fixes conflict between -server libext2fs-devel)
+
+* Mon Feb 08 2010 Guillaume Rousse <guillomovitch@mandriva.org> 1.3.1-3mdv2010.1
++ Revision: 502234
+- fix exported symbols list (should fix smbk5pwd overlay)
+- no need to prevent init script translation
+
+* Thu Dec 31 2009 Funda Wang <fwang@mandriva.org> 1.3.1-2mdv2010.1
++ Revision: 484334
+- rebuild for db4.8
+
+* Mon Nov 23 2009 Guillaume Rousse <guillomovitch@mandriva.org> 1.3.1-1mdv2010.1
++ Revision: 469224
+- update to new version 1.3.1
+
+* Thu Nov 19 2009 Zombie Ryushu <ryushu@mandriva.org> 1.3.0-1mdv2010.1
++ Revision: 467455
+- Fix man pages
+- Fix files section
+- Fix files section
+- Upgrade to 1.3.0 stable from rc1
+- Upgrade to 1.3.0 stable from rc1
+
+* Tue Oct 13 2009 Guillaume Rousse <guillomovitch@mandriva.org> 1.3.0-0.rc1.1mdv2010.0
++ Revision: 457005
+- new version
+
+* Tue Oct 06 2009 Guillaume Rousse <guillomovitch@mandriva.org> 1.3.0-0.pre10.1mdv2010.0
++ Revision: 455249
+- new pre-release
+
+* Fri Aug 28 2009 Guillaume Rousse <guillomovitch@mandriva.org> 1.3.0-0.pre6.1mdv2010.0
++ Revision: 421808
+- new version
+- drop unused sources
+- cleanup patch set
+
+* Wed Feb 25 2009 Guillaume Rousse <guillomovitch@mandriva.org> 1.2.1-2mdv2009.1
++ Revision: 344919
+- rebuild against new readline
+- fix format errors
+
+* Sat Nov 08 2008 Guillaume Rousse <guillomovitch@mandriva.org> 1.2.1-1mdv2009.1
++ Revision: 301107
+- update to new version 1.2.1
+
+* Mon Oct 27 2008 Guillaume Rousse <guillomovitch@mandriva.org> 1.2-6mdv2009.1
++ Revision: 297548
+- fix perl scripts interpreter, and install password check plugin
+
+* Sun Oct 26 2008 Guillaume Rousse <guillomovitch@mandriva.org> 1.2-5mdv2009.1
++ Revision: 297291
+- ship utility scripts in server package
+
+* Wed Oct 01 2008 Guillaume Rousse <guillomovitch@mandriva.org> 1.2-4mdv2009.0
++ Revision: 290690
+- conflict with openafs has been fixed
+
+* Tue Jul 15 2008 Guillaume Rousse <guillomovitch@mandriva.org> 1.2-3mdv2009.0
++ Revision: 235929
+- mark /etc/sysconfig/heimdal as configuration file
+
+* Tue Jul 15 2008 Guillaume Rousse <guillomovitch@mandriva.org> 1.2-2mdv2009.0
++ Revision: 235889
+- fix default database location
+
+* Wed Jul 02 2008 Guillaume Rousse <guillomovitch@mandriva.org> 1.2-1mdv2009.0
++ Revision: 230714
+- new version
+
+  + Buchan Milne <bgmilne@mandriva.org>
+    - New version 1.2
+      Address some overlinking/underlinking issues (not all fixed yet)
+      Build against system sqlite
+
+  + Pixel <pixel@mandriva.com>
+    - do not call ldconfig in %%post/%%postun, it is now handled by filetriggers
+    - normalize call to ldconfig in %%post/%%postun
+    - adapt to %%_localstatedir now being /var instead of /var/lib (#22312)
+
+* Mon Mar 10 2008 Guillaume Rousse <guillomovitch@mandriva.org> 1.1-4mdv2008.1
++ Revision: 183582
+- move headers back to standard location
+  make devel package conflict with mit-kerberos devel package
+
+* Fri Mar 07 2008 Guillaume Rousse <guillomovitch@mandriva.org> 1.1-3mdv2008.1
++ Revision: 181388
+- don't redefine rpm macros, it break readline detection
+- rediff readline test fix using automake source files
+- use PLD patch to avoid install libeditline, so as to fix conflict with readline
+
+* Mon Feb 18 2008 Thierry Vignaud <tv@mandriva.org> 1.1-2mdv2008.1
++ Revision: 170887
+- rebuild
+- fix "foobar is blabla" summary (=> "blabla") so that it looks nice in rpmdrake
+- fix summary-not-capitalized
+
+* Fri Jan 25 2008 Guillaume Rousse <guillomovitch@mandriva.org> 1.1-1mdv2008.1
++ Revision: 158141
+- new version
+  drop patch 8 and 9 (merged upstream)
+  drop additional sources
+  only use specific library directory for releases <= 2007.1
+
+  + Buchan Milne <bgmilne@mandriva.org>
+    - Improve descriptions
+    - Add chkconfig lines for distros that dont yet support LSB tags
+    - Remove attributions, as it no longer resembles the script attributed to.
+
+  + Olivier Blin <blino@mandriva.org>
+    - restore BuildRoot
+
+* Mon Dec 24 2007 Oden Eriksson <oeriksson@mandriva.com> 1.0.2-2mdv2008.1
++ Revision: 137508
+- rebuilt against openldap-2.4.7 libs
+
+  + Thierry Vignaud <tv@mandriva.org>
+    - kill re-definition of %%buildroot on Pixel's request
+
+* Mon Dec 17 2007 Guillaume Rousse <guillomovitch@mandriva.org> 1.0.2-1mdv2008.1
++ Revision: 121654
+- new version
+
+* Sun Dec 09 2007 Guillaume Rousse <guillomovitch@mandriva.org> 1.0.2-0.RC6.1mdv2008.1
++ Revision: 116778
+- new version
+
+  + Thierry Vignaud <tv@mandriva.org>
+    - buildrequires X11-devel instead of XFree86-devel
+
+  + Buchan Milne <bgmilne@mandriva.org>
+    - Use --detach for ipropd-master by default
+    - Avoid conflict with krb5-devel, by:
+     - moving headers to %%_includedir/heimdal
+     - splitting of the devel docs
+     - renaming krb5-config to heimdal-config
+
+* Thu Sep 27 2007 Buchan Milne <bgmilne@mandriva.org> 1.0.1-4mdv2008.0
++ Revision: 93260
+- Dont run tests by default
+- Buildrequire texinfo for docs
+- Conflict with libgssapi2 on 2008.0 to take care of upgrade case
+- Ship schema file (hdb.schema) for hdb_ldap
+- Start and stop all relevant daemons in init script (configurable)
+- Fix start/stop messages in init script (part of bug #32897)
+- Require krb5 on mdv2008.0 or later (part of bug #27273)
+- Fix location of configuration files (bug #32898)
+- Ship some files in svn but missing from tarball, among others to
+  - ship html docs
+  - ship files necessary for tests
+- Enable tests (except for check-ipropd which fails only under rpm)
+- Make backports work (by shipping libs in package-specific dir) on 2007.1 or older
+
+* Sun Sep 09 2007 Buchan Milne <bgmilne@mandriva.org> 1.0.1-3mdv2008.0
++ Revision: 83707
+- Buildrequire e2fsprogs-devel (fixes #32110)
+
+  + Guillaume Rousse <guillomovitch@mandriva.org>
+    - adjust conflict on libxmlrpc-devel
+
+* Thu Aug 23 2007 Thierry Vignaud <tv@mandriva.org> 1.0.1-2mdv2008.0
++ Revision: 70270
+- kill file require on chkconfig
+
+* Thu Aug 16 2007 Buchan Milne <bgmilne@mandriva.org> 1.0.1-1mdv2008.0
++ Revision: 64524
+- New version 1.0.1
+- Fix daemons detaching from init script (#27274)
+- Add conflict with ftp-client-krb5 (#23757)
+- Add conflicts to heimdal-login (is probably totally uninstallable now) (#23759)
+- Add conflict with telnet-client-krb5 (#23763)
+- Drop ftpusers file conflicting with man-pages (#32181)
+- Buildrequire readline devel (fixes conflict with editline) (#25605)
+
+* Tue Jun 19 2007 Guillaume Rousse <guillomovitch@mandriva.org> 0.8.1-4mdv2008.0
++ Revision: 41558
+- explicit conflicts from devel package with krb5-devel and gssapi-devel
+
+* Mon Jun 04 2007 Buchan Milne <bgmilne@mandriva.org> 0.8.1-3mdv2008.0
++ Revision: 35100
+- BuildRequire openldap-devel so --with-openldap has a chance of working
+
+* Fri Apr 27 2007 Guillaume Rousse <guillomovitch@mandriva.org> 0.8.1-2mdv2008.0
++ Revision: 18677
+- get rid of heimdal mk_cmds to fix ext2fs-devel conflict, and explicit conflict with xmlrpc-devel
+
+* Fri Apr 27 2007 Guillaume Rousse <guillomovitch@mandriva.org> 0.8.1-1mdv2008.0
++ Revision: 18510
+- new version
+
+
+* Tue Mar 20 2007 Guillaume Rousse <guillomovitch@mandriva.org> 0.7.2-5mdv2007.1
++ Revision: 147013
+- drop unapplied patches, bunzip remaining one
+- fix database location
+  use standard compilation flags, execepted fortify flags
+
+* Wed Mar 14 2007 Guillaume Rousse <guillomovitch@mandriva.org> 0.7.2-4mdv2007.1
++ Revision: 143504
+- fix build dependencies
+- make sure the lib package doesn't conflict with its mit equivalent, while the workstation and the server one does
+- make workstation package provides kerberos-workstation
+- move data into more compliant %%{_localstatedir}/%%{name}
+- drop alternatives, use plain old conflicts with krb5 and openafs
+- rename base package into -workstation, as for the MIT implementation
+- minor spec cleanups
+- yet another polish description slaid
+- cleanup %%file sections
+- drop polish translations (if i was not so lazy, I'd move them to rpm-summary package)
+
+* Thu Feb 22 2007 Guillaume Rousse <guillomovitch@mandriva.org> 0.7.2-3mdv2007.1
++ Revision: 124675
+- explicit conflict with MITH telnet and ftp server
+- fix alternative problem (fix #28856)
+
+  + Buchan Milne <bgmilne@mandriva.org>
+    - Import heimdal
+
+* Thu Aug 24 2006 Thierry Vignaud <tvignaud@mandriva.com> 0.7.2-2mdv2007.0
+- fix group
+
+* Thu Mar 23 2006 Buchan Milne <bgmilne@mandriva.org> 0.7.2-1mdk
+- New release 0.7.2
+- buildrequire bison
+
+* Thu Sep 22 2005 Buchan Milne <bgmilne@mandriva.org> 0.7.1-1mdk
+- finally finish the last bits of this initial package
+
+* Fri Nov 26 2004 Buchan Milne <bgmilne@linux-mandrake.com> 0.6.3-1mdk
+- 0.6.3
+
+* Tue Jul 27 2004 Buchan Milne <bgmilne@linux-mandrake.com> 0.6.2-1mdk
+- 0.6.2
+- drop db4 patchs (p3,p4) and compilation fixes (p5) - applied upstream
+

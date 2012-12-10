@@ -1,0 +1,11 @@
+# default: off
+# description: Heimdal Kerberized Remote Shell daemon
+service rsh
+{
+	socket_type	= stream
+	wait 	= no
+	user	= root
+	server	= /usr/sbin/rshd
+	log_on_failure	+= USERID
+	disable = yes
+}

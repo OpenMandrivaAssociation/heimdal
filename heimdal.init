@@ -1,0 +1,163 @@
+#! /bin/sh
+#
+### BEGIN INIT INFO
+# Provides:       kdc
+# Required-Start: $network
+# Required-Stop:
+# Default-Start:   3 4 5
+# Default-Stop:
+# Description:    Starts and stops the Heimdal kdc, and optionally kadmin, kpasswdd,
+# ipropd-slave/ipropd-master etc.
+### END INIT INFO
+# chkconfig: 345 39 61
+# description:	Starts and stops the Heimdal kdc, and optionally kadmin, kpasswdd, \
+# ipropd-slave/ipropd-master etc.
+
+# define gprintf for distros without it:
+gprintf() {
+	printf -- "$@"
+}
+
+[ -f /etc/rc.d/init.d/functions ] && . /etc/rc.d/init.d/functions
+
+service=kdc
+KDC_DESC="Heimdal Kerberos 5 Key Distribution Center"
+START_KDC=yes
+KDC_DAEMON=/usr/sbin/kdc
+KDC_ARGS="--detach"
+MASTER_DESC="Heimdal Incremental Propagation Server"
+START_MASTER=no
+MASTER_DAEMON=/usr/sbin/ipropd-master
+MASTER_ARGS="--detach"
+SLAVE_DESC="Heimdal Incremental Propagation Slave"
+START_SLAVE=no
+SLAVE_DAEMON=/usr/sbin/ipropd-slave
+SLAVE_ARGS="--detach"
+MASTER=""
+KADMIND_DESC="Heimdal administration server"
+START_KADMIND=no
+KADMIND_DAEMON=/usr/sbin/kadmind
+KADMIND_ARGS=""
+START_KPASSWD=no
+KPASSWD_DESC="Heimdal Kerberos 5 password changing server"
+KPASSWD_DAEMON="/usr/sbin/kpasswdd"
+KPASSWD_ARGS=""
+[ -e /etc/sysconfig/heimdal ] && . /etc/sysconfig/heimdal
+
+start() {
+	# Start daemons.
+	if [ "${START_KDC}" = "yes" -a -x "${KDC_DAEMON}" ]
+	then
+		gprintf "Starting %s:" "${KDC_DESC}"
+		daemon "${KDC_DAEMON} ${KDC_ARGS}"
+		RETVAL1=$?
+		echo
+	fi
+	if [ "${START_KADMIND}" = "yes" -a -x "${KADMIND_DAEMON}" ]
+	then
+		gprintf "Starting %s:" "${KADMIND_DESC}"
+		daemon "${KADMIND_DAEMON} ${KADMIND_ARGS} &"
+		RETVAL2=$?
+		echo
+	fi
+	if [ "${START_MASTER}" = "yes" -a -x "${MASTER_DAEMON}" ]
+	then
+		gprintf "Starting %s" "${MASTER_DESC}"
+		daemon "${MASTER_DAEMON} ${MASTER_ARGS}"
+		RETVAL3=$?
+		echo
+	fi
+	if [ "${START_SLAVE}" = "yes" -a -x "${SLAVE_DAEMON}" ]
+	then
+		gprintf "Starting %s" "${SLAVE_DESC}"
+		daemon "${SLAVE_DAEMON} ${SLAVE_ARGS} ${MASTER}"
+		RETVAL4=$?
+		echo
+	fi
+	if [ "${START_KPASSWD}" = "yes" -a -x "${KPASSWD_DAEMON}" ]
+	then
+		gprintf "Starting %s:" "${KPASSWD_DESC}"
+		daemon "${KPASSWD_DAEMON} ${KPASSWD_ARGS} &"
+		RETVAL5=$?
+		echo
+	fi
+
+	RETVAL=$[RETVAL1+RETVAL2+RETVAL3+RETVAL4+RETVAL5]
+}
+
+stop() {
+	# Stop killprocs.
+	if [ "${START_KDC}" = "yes" -a -x "${KDC_DAEMON}" ]
+	then
+		gprintf "Stopping %s:" "${KDC_DESC}"
+		killproc "${KDC_DAEMON}" -TERM
+		RETVAL1=$?
+		echo
+	fi
+	if [ "${START_KADMIND}" = "yes" -a -x "${KADMIND_DAEMON}" ]
+	then
+		gprintf "Stopping %s:" "${KADMIND_DESC}"
+		killproc "${KADMIND_DAEMON}" -TERM
+		RETVAL2=$?
+		echo
+	fi
+	if [ "${START_MASTER}" = "yes" -a -x "${MASTER_DAEMON}" ]
+	then
+		gprintf "Stopping %s:" "${MASTER_DESC}"
+		killproc "${MASTER_DAEMON}" -TERM
+		RETVAL3=$?
+		echo
+	fi
+	if [ "${START_SLAVE}" = "yes" -a -x "${SLAVE_DAEMON}" ]
+	then
+		gprintf "Stopping %s:" "${SLAVE_DESC}"
+		killproc "${SLAVE_DAEMON}" -TERM
+		RETVAL4=$?
+		echo
+	fi
+	if [ "${START_KPASSWD}" = "yes" -a -x "${KPASSWD_DAEMON}" ]
+	then
+		gprintf "Stopping %s:" "${KPASSWD_DESC}"
+		killproc "${KPASSWD_DAEMON}" -TERM
+		RETVAL5=$?
+		echo
+	fi
+
+	RETVAL=$[RETVAL1+RETVAL2+RETVAL3+RETVAL4+RETVAL5]
+}
+
+# See how we were called.
+case "$1" in
+  start)
+  	start
+	;;
+  stop)
+  	stop
+	;;
+  restart|force-reload)
+	stop
+	start
+	;;
+  reload)
+	;;
+  status)
+	if [ "${START_KDC}" = "yes" ]; then status ${KDC_DAEMON};fi
+	RETVAL1=$?
+	if [ "${START_KADMIND}" = "yes" ];then status ${KADMIND_DAEMON};fi
+	RETVAL2=$?
+	if [ "${START_MASTER}" = "yes" ]; then status ${MASTER_DAEMON};fi
+	RETVAL3=$?
+	if [ "${START_SLAVE}" = "yes" ]; then status ${SLAVE_DAEMON};fi
+	RETVAL4=$?
+	if [ "${START_KPASSWD}" = "yes" ]; then status ${KPASSWD_DAEMON};fi
+	RETVAL5=$?
+
+	RETVAL=$[RETVAL1+RETVAL2+RETVAL3+RETVAL4+RETVAL5]
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart|reload|force-reload|status}"
+	exit 1
+esac
+
+exit $RETVAL
+

@@ -1,0 +1,12 @@
+# default: off
+# description: Heimdal Kerberized telnet daemon
+service telnet
+{
+	port	= 23
+	socket_type	= stream
+	wait 	= no
+	user	= root
+	server	= /usr/sbin/telnetd
+	log_on_failure	+= USERID
+	disable = yes
+}
