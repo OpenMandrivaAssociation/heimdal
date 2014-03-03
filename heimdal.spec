@@ -65,6 +65,7 @@ This package contains Kerberos 5 programs for use on workstations.
 
 %files workstation
 %{_bindir}/afslog
+%{_bindir}/compile_et
 %{_bindir}/kgetcred
 %{_bindir}/kx
 %{_bindir}/pfrom
