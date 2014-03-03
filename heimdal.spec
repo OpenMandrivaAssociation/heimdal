@@ -1,7 +1,13 @@
-Name:		heimdal
-Version:	1.5.2
-Release:	5
+%if %{_use_internal_dependency_generator}
+%define __noautoreq 'devel\\(libcom_err(.*)\\)'
+%else
+%define _requires_exceptions devel(libcom_err
+%endif
+
 Summary:	Heimdal implementation of Kerberos V5 system
+Name:		heimdal
+Version:	1.5.3
+Release:	1
 License:	BSD-like
 Group:		Networking/Other
 URL:		http://www.h5l.org
@@ -17,27 +23,21 @@ Source6:	%{name}-rshd.xinetd
 Source7:	%{name}-telnetd.xinetd
 Source8:	%{name}-kadmind.xinetd
 Patch11:	heimdal-1.4-passwd-check.patch
+BuildRequires:	bison
+BuildRequires:	flex
+BuildRequires:	texinfo
+BuildRequires:	db-devel
+BuildRequires:	openldap-devel >= 2.0
+BuildRequires:	pam-devel
+BuildRequires:	readline-devel
+BuildRequires:	termcap-devel
+BuildRequires:	pkgconfig(ncurses)
+BuildRequires:	pkgconfig(sqlite3)
 BuildRequires:	pkgconfig(x11)
 BuildRequires:	pkgconfig(xau)
 BuildRequires:	pkgconfig(xt)
-BuildRequires:	db-devel >= 4.2.52
-BuildRequires:	flex
-BuildRequires:	bison
-BuildRequires:	libtool
-BuildRequires:	pkgconfig(ncurses)
-BuildRequires:	openldap-devel >= 2.0
-BuildRequires:	readline-devel termcap-devel
-BuildRequires:	pam-devel
-BuildRequires:	texinfo
-BuildRequires:	sqlite3-devel
 #Required for tests/ldap
 BuildRequires:	openldap-servers
-
-%if %{_use_internal_dependency_generator}
-%define __noautoreq 'devel\\(libcom_err(.*)\\)'
-%else
-%define _requires_exceptions devel(libcom_err
-%endif
 
 %description
 Heimdal is a free implementation of Kerberos 5. The goals are to:
@@ -51,16 +51,96 @@ Heimdal is a free implementation of Kerberos 5. The goals are to:
    - include enough backwards compatibility with Kerberos V4
    - IPv6 support
 
+#----------------------------------------------------------------------------
+
 %package	workstation
 Summary:	Kerberos programs for use on workstations
 Group:		Networking/Other
 Requires:	%{name}-libs = %{EVRD}
 Conflicts:	krb5-workstation
 Provides:	kerberos-workstation
-Obsoletes:	%{name} < %{EVRD}
 
 %description	workstation
 This package contains Kerberos 5 programs for use on workstations.
+
+%files workstation
+%{_bindir}/afslog
+%{_bindir}/kgetcred
+%{_bindir}/kx
+%{_bindir}/pfrom
+%{_bindir}/rxtelnet
+%{_bindir}/rxterm
+%{_bindir}/string2key
+%{_bindir}/tenletxr
+%{_bindir}/otpprint
+%{_bindir}/verify_krb5_conf
+%{_bindir}/xnlock
+%{_bindir}/kf
+%{_bindir}/kdestroy
+%{_bindir}/kinit
+%{_bindir}/klist
+%{_bindir}/kpasswd
+%{_bindir}/gsstool
+%{_bindir}/kcc
+%{_bindir}/pagsh
+%{_bindir}/hxtool
+%{_bindir}/idn-lookup
+%{_bindir}/kswitch
+%attr(4755,root,root) %{_bindir}/otp
+%attr(4755,root,root) %{_bindir}/su
+%attr(4755,root,root) %{_bindir}/ksu
+%{_sbindir}/kadmin
+%{_sbindir}/ktutil
+%{_sbindir}/digest-service
+%{_mandir}/man1/afslog.1*
+%{_mandir}/man1/ksu.1*
+%{_mandir}/man1/kdestroy.1*
+%{_mandir}/man1/kgetcred.1*
+%{_mandir}/man1/klist.1*
+%{_mandir}/man1/kswitch.1*
+%{_mandir}/man1/kinit.1*
+%{_mandir}/man1/kpasswd.1*
+%{_mandir}/man1/pagsh.1*
+%{_mandir}/man1/otp.1*
+%{_mandir}/man1/otpprint.1*
+%{_mandir}/man1/kf.1*
+%{_mandir}/man1/kx.1*
+%{_mandir}/man1/pfrom.1*
+%{_mandir}/man1/rxtelnet.1*
+%{_mandir}/man1/rxterm.1*
+%{_mandir}/man1/tenletxr.1*
+%{_mandir}/man1/xnlock.1*
+%{_mandir}/man5/krb5.conf.5.*
+%{_mandir}/man5/login.access.5.*
+%{_mandir}/cat1/kdestroy.1*
+%{_mandir}/cat1/kgetcred.1*
+%{_mandir}/cat1/klist.1*
+%{_mandir}/cat1/kswitch.1*
+%{_mandir}/cat1/afslog.1*
+%{_mandir}/cat1/ksu.1*
+%{_mandir}/cat1/kinit.1*
+%{_mandir}/cat1/kpasswd.1*
+%{_mandir}/cat1/pagsh.1*
+%{_mandir}/cat1/otp.1*
+%{_mandir}/cat1/otpprint.1*
+%{_mandir}/cat1/kf.1*
+%{_mandir}/cat1/kx.1*
+%{_mandir}/cat1/pfrom.1*
+%{_mandir}/cat1/rxtelnet.1*
+%{_mandir}/cat1/rxterm.1*
+%{_mandir}/cat1/tenletxr.1*
+%{_mandir}/cat1/xnlock.1*
+%{_mandir}/man5/mech.5*
+%{_mandir}/cat5/mech.5*
+%{_mandir}/*8/verify_krb5_conf.8*
+%{_mandir}/man8/string2key.8*
+%{_mandir}/man8/kadmin.8*
+%{_mandir}/man8/ktutil.8*
+%{_mandir}/cat8/string2key.8*
+%{_mandir}/cat8/kadmin.8*
+%{_mandir}/cat8/ktutil.8*
+
+#----------------------------------------------------------------------------
 
 %package	server
 Summary:	Kerberos Server
@@ -75,6 +155,68 @@ Conflicts:	krb5-server
 %description	server
 This package contains the master KDC.
 
+%files server
+%doc NEWS TODO
+%{_initrddir}/%{name}
+%config(noreplace) %{_sysconfdir}/sysconfig/%{name}
+%config(noreplace) %{_sysconfdir}/xinetd.d/kadmind
+%dir %{_localstatedir}/lib/%{name}
+%config(noreplace) %{_localstatedir}/lib/%{name}/kadmind.acl
+# %{_mandir}/*1/kimpersonate.1*
+%{_mandir}/*8/kdigest.8*
+%{_mandir}/*8/kimpersonate.8*
+%{_mandir}/*8/iprop.8*
+%{_mandir}/*8/iprop-log.8*
+%{_mandir}/man8/kstash.8*
+%{_mandir}/man8/hprop.8*
+%{_mandir}/man8/hpropd.8*
+%{_mandir}/man8/kadmind.8*
+%{_mandir}/man8/kdc.8*
+%{_mandir}/man8/kxd.8*
+%{_mandir}/man8/kfd.8*
+%{_mandir}/man8/kpasswdd.8*
+%{_mandir}/man8/kcm.8*
+%{_mandir}/*8/ipropd-*.8*
+%{_mandir}/cat8/kstash.8*
+%{_mandir}/cat8/hprop.8*
+%{_mandir}/cat8/hpropd.8*
+%{_mandir}/cat8/kadmind.8*
+%{_mandir}/cat8/kdc.8*
+%{_mandir}/cat8/kxd.8*
+%{_mandir}/cat8/kfd.8*
+%{_mandir}/cat8/kpasswdd.8*
+%{_mandir}/cat8/kcm.8*
+%{_sbindir}/kstash
+%{_sbindir}/hprop
+%{_sbindir}/hpropd
+%{_sbindir}/ipropd-master
+%{_sbindir}/ipropd-slave
+%{_sbindir}/kadmind
+%{_sbindir}/kdc
+%{_sbindir}/kxd
+%{_sbindir}/kfd
+%{_sbindir}/kpasswdd
+%{_sbindir}/iprop-log
+%{_sbindir}/kcm
+%{_sbindir}/kdigest
+%{_sbindir}/kimpersonate
+%{_libdir}/%{name}
+%{_datadir}/%{name}
+%doc doc/*.html lib/hdb/hdb.schema
+
+%pre server
+if [ -d %{_var}/%{name} ]; then
+    mv %{_var}/%{name} %{_localstatedir}/lib/%{name}
+fi
+
+%post server
+%_post_service %{name}
+
+%preun server
+%_preun_service %{name}
+
+#----------------------------------------------------------------------------
+
 # Not working right yet
 %if 0
 %package	hdb_ldap
@@ -85,7 +227,12 @@ Requires:	%{name}-server = %{EVRD}
 %description	hdb_ldap
 This package contains the LDAP HDB backend plugin, which allows the use of
 an LDAP server for storing the Heimdal database.
+
+%files hdb_ldap
+%{_libdir}/hdb_ldap*
 %endif
+
+#----------------------------------------------------------------------------
 
 %package	libs
 Summary:	Heimdal shared libraries
@@ -95,6 +242,17 @@ Conflicts:	%{_lib}gssapi2
 %description	libs
 This package contains shared libraries required by several of the other heimdal
 packages.
+
+%files libs
+%attr(400,root,root) %ghost %{_sysconfdir}/krb5.keytab
+%{_libdir}/lib*.so.*
+%{_libdir}/windc*.so.*
+%{_infodir}/heimdal.info*
+%{_infodir}/hx509.info.*
+%{_mandir}/man8/kerberos.8*
+%{_mandir}/cat8/kerberos.8*
+
+#----------------------------------------------------------------------------
 
 %package	login
 Summary:	Used when signing onto a system
@@ -109,6 +267,13 @@ switch from one user to another at any time (most modern shells have
 support for this feature built into them, however). This package
 contain kerberized version login program.
 
+%files login
+%{_bindir}/login
+%{_mandir}/man1/login.1*
+%{_mandir}/cat1/login.1*
+
+#----------------------------------------------------------------------------
+
 %package	ftp
 Summary:	The standard UNIX FTP (file transfer protocol) client
 Group:		Networking/Other
@@ -121,6 +286,13 @@ The ftp package provides the standard UNIX command-line FTP client
 with kerberos authentication support. FTP is the file transfer
 protocol, which is a widely used Internet protocol for transferring
 files and for archiving files.
+
+%files ftp
+%{_bindir}/ftp
+%{_mandir}/man1/ftp.1*
+%{_mandir}/cat1/ftp.1*
+
+#----------------------------------------------------------------------------
 
 %package	rsh
 Summary:	Clients for remote access commands (rsh, rlogin, rcp)
@@ -135,6 +307,16 @@ between machines (rsh, rlogin and rcp). All three of these commands
 use rhosts style authentication. This package contains the clients
 needed for all of these services.
 
+%files rsh
+%{_bindir}/rsh
+%{_bindir}/rcp
+%{_mandir}/man1/rsh.1*
+%{_mandir}/cat1/rsh.1*
+%{_mandir}/man1/rcp.1*
+%{_mandir}/cat1/rcp.1*
+
+#----------------------------------------------------------------------------
+
 %package	telnet
 Summary:	Client for the telnet remote login
 Group:		Networking/Other
@@ -147,6 +329,13 @@ Provides:	telnet-client
 Telnet is a popular protocol for remote logins across the Internet.
 This package provides a command line telnet client.
 
+%files telnet
+%{_bindir}/telnet
+%{_mandir}/man1/telnet.1*
+%{_mandir}/cat1/telnet.1*
+
+#----------------------------------------------------------------------------
+
 %package	ftpd
 Summary:	The standard UNIX FTP (file transfer protocol) server
 Group:		System/Servers
@@ -158,6 +347,20 @@ Provides:	ftp-server
 %description	ftpd
 FTP is the file transfer protocol, which is a widely used Internet
 protocol for transferring files and for archiving files.
+
+%files ftpd
+%config(noreplace) %{_sysconfdir}/xinetd.d/ftpd
+%{_sbindir}/ftpd
+%{_mandir}/man8/ftpd.8*
+%{_mandir}/cat8/ftpd.8*
+
+%post ftpd
+service xinetd condreload
+
+%postun ftpd
+service xinetd condreload
+
+#----------------------------------------------------------------------------
 
 %package	rshd
 Summary:	Server for remote access commands (rsh, rlogin, rcp)
@@ -173,6 +376,20 @@ between machines (rsh, rlogin and rcp). All three of these commands
 use rhosts style authentication. This package contains servers needed
 for all of these services.
 
+%files rshd
+%config(noreplace) %{_sysconfdir}/xinetd.d/rshd
+%{_sbindir}/rshd
+%{_mandir}/man8/rshd.8*
+%{_mandir}/cat8/rshd.8*
+
+%post rshd
+service xinetd condreload
+
+%postun rshd
+service xinetd condreload
+
+#----------------------------------------------------------------------------
+
 %package	telnetd
 Summary:	Server for the telnet remote login
 Group:		System/Servers
@@ -187,6 +404,20 @@ Telnet is a popular protocol for remote logins across the Internet.
 This package provides a telnet daemon which allows remote logins into
 the machine it is running on.
 
+%files telnetd
+%config(noreplace) %{_sysconfdir}/xinetd.d/telnetd
+%{_sbindir}/telnetd
+%{_mandir}/man8/telnetd.8*
+%{_mandir}/cat8/telnetd.8*
+
+%post telnetd
+service xinetd condreload
+
+%postun telnetd
+service xinetd condreload
+
+#----------------------------------------------------------------------------
+
 %if 0
 %package	clients
 Summary:	Kerberos programs for use on workstations
@@ -197,6 +428,8 @@ Requires:	%{name}-libs = %{EVRD}
 Kerberos 5 Clients.
 %endif
 
+#----------------------------------------------------------------------------
+
 %package	daemons
 Summary:	Kerberos daemons programs for use on servers
 Group:		System/Servers
@@ -204,6 +437,16 @@ Requires:	%{name}-libs = %{EVRD}
 
 %description	daemons
 Kerberos Daemons.
+
+%files daemons
+%{_sbindir}/popper
+%{_sbindir}/push
+%{_mandir}/man8/popper.8*
+%{_mandir}/man8/push.8*
+%{_mandir}/cat8/popper.8*
+%{_mandir}/cat8/push.8*
+
+#----------------------------------------------------------------------------
 
 %package	devel
 Summary:	Header files for heimdal
@@ -214,16 +457,34 @@ Conflicts:	krb5-devel
 Conflicts:	ext2fs-devel
 
 %description	devel
-contains files needed to compile and link software using the kerberos
+Contains files needed to compile and link software using the kerberos
 libraries.
+
+%files devel
+%{_bindir}/heimdal-config
+%{multiarch_bindir}/heimdal-config
+%{_libdir}/lib*.so
+%{_libdir}/windc.so
+%{_includedir}/*
+%{_libdir}/pkgconfig/heimdal-gssapi.pc
+
+#----------------------------------------------------------------------------
 
 %package	devel-doc
 Summary:	Developer documentation for heimdal
 Group:		System/Libraries
-Conflicts:	heimdal-devel <= 1.0.1-4
+Conflicts:	heimdal-devel
 
 %description	devel-doc
 Contains the documentation covering functions etc. in the heimdal libraries
+
+%files devel-doc
+%{_mandir}/man1/krb5-config.1*
+%{_mandir}/cat1/krb5-config.1*
+%{_mandir}/man3/*
+%{_mandir}/cat3/*
+
+#----------------------------------------------------------------------------
 
 %prep
 %setup -q
@@ -303,550 +564,13 @@ mv %{buildroot}%{_sbindir}/%{name} %{buildroot}%{_libdir}
 # cleanups
 rm -f %{buildroot}%{_libdir}/*.*a
 
+# looks like we don't need these
+rm -f %{buildroot}%{_mandir}/*5/qop.5*
+
 %check
 %if %{?_with_test:1}%{!?_with_test:0}
 # For some reason this check fails partially just under rpm:
 perl -pi -e 's/check-iprop //g' tests/kdc/Makefile
 make -C tests check
 %endif
-
-%pre server
-if [ -d %{_var}/%{name} ]; then
-    mv %{_var}/%{name} %{_localstatedir}/lib/%{name}
-fi
-
-%post server
-%_post_service %{name}
-
-%preun server
-%_preun_service %{name}
-
-%post ftpd
-service xinetd condreload
-
-%postun ftpd
-service xinetd condreload
-
-%post rshd
-service xinetd condreload
-
-%postun rshd
-service xinetd condreload
-
-%post telnetd
-service xinetd condreload
-
-%postun telnetd
-service xinetd condreload
-
-%files server
-%doc NEWS TODO
-%{_initrddir}/%{name}
-%config(noreplace) %{_sysconfdir}/sysconfig/%{name}
-%config(noreplace) %{_sysconfdir}/xinetd.d/kadmind
-%dir %{_localstatedir}/lib/%{name}
-%config(noreplace) %{_localstatedir}/lib/%{name}/kadmind.acl
-# %{_mandir}/*1/kimpersonate.1*
-%{_mandir}/*8/kdigest.8.*
-%{_mandir}/*8/kimpersonate.8.*
-%{_mandir}/*8/iprop.8*
-%{_mandir}/*8/iprop-log.8*
-%{_mandir}/man8/kstash.8*
-%{_mandir}/man8/hprop.8*
-%{_mandir}/man8/hpropd.8*
-%{_mandir}/man8/kadmind.8*
-%{_mandir}/man8/kdc.8*
-%{_mandir}/man8/kxd.8*
-%{_mandir}/man8/kfd.8*
-%{_mandir}/man8/kpasswdd.8*
-%{_mandir}/man8/kcm.8*
-%{_mandir}/*8/ipropd-*.8*
-%{_mandir}/cat8/kstash.8*
-%{_mandir}/cat8/hprop.8*
-%{_mandir}/cat8/hpropd.8*
-%{_mandir}/cat8/kadmind.8*
-%{_mandir}/cat8/kdc.8*
-%{_mandir}/cat8/kxd.8*
-%{_mandir}/cat8/kfd.8*
-%{_mandir}/cat8/kpasswdd.8*
-%{_mandir}/cat8/kcm.8*
-%{_sbindir}/kstash
-%{_sbindir}/hprop
-%{_sbindir}/hpropd
-%{_sbindir}/ipropd-master
-%{_sbindir}/ipropd-slave
-%{_sbindir}/kadmind
-%{_sbindir}/kdc
-%{_sbindir}/kxd
-%{_sbindir}/kfd
-%{_sbindir}/kpasswdd
-%{_sbindir}/iprop-log
-%{_sbindir}/kcm
-%{_sbindir}/kdigest
-%{_sbindir}/kimpersonate
-%{_libdir}/%{name}
-%{_datadir}/%{name}
-%doc doc/*.html lib/hdb/hdb.schema
-
-%if 0
-%files hdb_ldap
-%{_libdir}/hdb_ldap*
-%endif
-
-%files libs
-#%dir %{_sysconfdir}/%{name}
-#attr(400,root,root) %ghost %{_sysconfdir}/%{name}/krb5.keytab
-%attr(400,root,root) %ghost %{_sysconfdir}/krb5.keytab
-%{_libdir}/lib*.so.*
-%{_libdir}/windc*.so.*
-%{_infodir}/heimdal.info*
-%{_infodir}/hx509.info.*
-%{_mandir}/man8/kerberos.8*
-%{_mandir}/cat8/kerberos.8*
-
-%files login
-%{_bindir}/login
-%{_mandir}/man1/login.1*
-%{_mandir}/cat1/login.1*
-
-%files ftp
-%{_bindir}/ftp
-%{_mandir}/man1/ftp.1*
-%{_mandir}/cat1/ftp.1*
-
-%files rsh
-%{_bindir}/rsh
-%{_bindir}/rcp
-%{_mandir}/man1/rsh.1*
-%{_mandir}/cat1/rsh.1*
-%{_mandir}/man1/rcp.1*
-%{_mandir}/cat1/rcp.1*
-
-%files telnet
-%{_bindir}/telnet
-%{_mandir}/man1/telnet.1*
-%{_mandir}/cat1/telnet.1*
-
-%files ftpd
-%config(noreplace) %{_sysconfdir}/xinetd.d/ftpd
-%{_sbindir}/ftpd
-%{_mandir}/man8/ftpd.8*
-%{_mandir}/cat8/ftpd.8*
-
-%files rshd
-%config(noreplace) %{_sysconfdir}/xinetd.d/rshd
-%{_sbindir}/rshd
-%{_mandir}/man8/rshd.8*
-%{_mandir}/cat8/rshd.8*
-
-%files telnetd
-%config(noreplace) %{_sysconfdir}/xinetd.d/telnetd
-%{_sbindir}/telnetd
-%{_mandir}/man8/telnetd.8*
-%{_mandir}/cat8/telnetd.8*
-
-%files workstation
-%{_bindir}/afslog
-%{_bindir}/kgetcred
-%{_bindir}/kx
-%{_bindir}/pfrom
-%{_bindir}/compile_et
-%{_bindir}/rxtelnet
-%{_bindir}/rxterm
-%{_bindir}/string2key
-%{_bindir}/tenletxr
-%{_bindir}/otpprint
-%{_bindir}/verify_krb5_conf
-%{_bindir}/xnlock
-%{_bindir}/kf
-%{_bindir}/kdestroy
-%{_bindir}/kinit
-%{_bindir}/klist
-%{_bindir}/kpasswd
-%{_bindir}/gsstool
-%{_bindir}/kcc
-%{_bindir}/pagsh
-%{_bindir}/hxtool
-%{_bindir}/idn-lookup
-%{_bindir}/kswitch
-%attr(4755,root,root) %{_bindir}/otp
-%attr(4755,root,root) %{_bindir}/su
-%attr(4755,root,root) %{_bindir}/ksu
-%{_sbindir}/kadmin
-%{_sbindir}/ktutil
-%{_sbindir}/digest-service
-%{_mandir}/man1/afslog.1*
-%{_mandir}/man1/ksu.1*
-# %{_mandir}/man1/kdigest.1*
-%{_mandir}/man1/kdestroy.1*
-%{_mandir}/man1/kgetcred.1*
-%{_mandir}/man1/klist.1*
-%{_mandir}/man1/kswitch.1*
-%{_mandir}/man1/kinit.1*
-%{_mandir}/man1/kpasswd.1*
-%{_mandir}/man1/pagsh.1*
-%{_mandir}/man1/otp.1*
-%{_mandir}/man1/otpprint.1*
-%{_mandir}/man1/kf.1*
-%{_mandir}/man1/kx.1*
-%{_mandir}/man1/pfrom.1*
-%{_mandir}/man1/rxtelnet.1*
-%{_mandir}/man1/rxterm.1*
-%{_mandir}/man1/tenletxr.1*
-%{_mandir}/man1/xnlock.1*
-%{_mandir}/man5/krb5.conf.5.*
-%{_mandir}/man5/login.access.5.*
-%{_mandir}/cat1/kdestroy.1*
-%{_mandir}/cat1/kgetcred.1*
-%{_mandir}/cat1/klist.1*
-%{_mandir}/cat1/kswitch.1*
-%{_mandir}/cat1/afslog.1*
-%{_mandir}/cat1/ksu.1*
-# %{_mandir}/cat1/kdigest.1*
-%{_mandir}/cat1/kinit.1*
-%{_mandir}/cat1/kpasswd.1*
-%{_mandir}/cat1/pagsh.1*
-%{_mandir}/cat1/otp.1*
-%{_mandir}/cat1/otpprint.1*
-%{_mandir}/cat1/kf.1*
-%{_mandir}/cat1/kx.1*
-%{_mandir}/cat1/pfrom.1*
-%{_mandir}/cat1/rxtelnet.1*
-%{_mandir}/cat1/rxterm.1*
-%{_mandir}/cat1/tenletxr.1*
-%{_mandir}/cat1/xnlock.1*
-%{_mandir}/man5/mech.5*
-%{_mandir}/*8/verify_krb5_conf.8*
-%{_mandir}/man8/string2key.8*
-%{_mandir}/man8/kadmin.8*
-%{_mandir}/man8/ktutil.8*
-%{_mandir}/cat8/string2key.8*
-%{_mandir}/cat8/kadmin.8*
-%{_mandir}/cat8/ktutil.8*
-
-%files daemons
-%{_sbindir}/popper
-%{_sbindir}/push
-%{_mandir}/man8/popper.8*
-%{_mandir}/man8/push.8*
-%{_mandir}/cat8/popper.8*
-%{_mandir}/cat8/push.8*
-
-%files devel
-%{_bindir}/heimdal-config
-%{multiarch_bindir}/heimdal-config
-%{_libdir}/lib*.so
-%{_libdir}/windc.so
-%{_includedir}/*
-%{_libdir}/pkgconfig/heimdal-gssapi.pc
-
-%files devel-doc
-%{_mandir}/man1/krb5-config.1*
-%{_mandir}/cat1/krb5-config.1*
-%{_mandir}/man3/*
-%{_mandir}/cat3/*
-
-
-%changelog
-* Wed May 30 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1.5.2-4
-+ Revision: 801363
-- add back compile_et
-- use %%{EVRD} macro
-- cosmetics
-- fix executable-marked-as-config-file
-- fix dependency filter usage with internal dependency generator
-- %{_bindir}/compile_et is no longer built
-- fix moving of files to %%{_libdir}/%%{name}
-- ditch buildroot cleaning
-- add 'ftp-client', 'rsh-client', 'rsh-server' & 'ftp-server' to provides
-- don't run autoconf
-- cleanups
-
-* Wed Feb 15 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1.5.2-3
-+ Revision: 774145
-- don't generate dependency on devel(libcom_err
-
-* Tue Feb 14 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1.5.2-2
-+ Revision: 774109
-- add a conflict on ext2fs-devel for devel package
-
-* Thu Jan 12 2012 Alexander Khrukin <akhrukin@mandriva.org> 1.5.2-1
-+ Revision: 760381
-- forgotten binary
-- version update  1.5.2
-
-  + Oden Eriksson <oeriksson@mandriva.com>
-    - P15: fix threading if the build host uses kernel 3.x
-    - various cleanups
-
-  + Bogdano Arendartchuk <bogdano@mandriva.com>
-    - build with db 5.1 (from fwang | 2011-04-12 11:00:31)
-
-* Fri Feb 04 2011 Funda Wang <fwang@mandriva.org> 1.4-2
-+ Revision: 635966
-- use symbolic link rather than hardlink for manpages
-- tighten BR
-- add correct source
-
-  + Buchan Milne <bgmilne@mandriva.org>
-    - Update URLs
-
-* Wed Sep 15 2010 Guillaume Rousse <guillomovitch@mandriva.org> 1.4-1mdv2011.0
-+ Revision: 578761
-- new version
-
-* Sat Jul 17 2010 Guillaume Rousse <guillomovitch@mandriva.org> 1.3.3-1mdv2011.0
-+ Revision: 554618
-- update to new version 1.3.3
-
-* Tue May 11 2010 Buchan Milne <bgmilne@mandriva.org> 1.3.2-3mdv2010.1
-+ Revision: 544535
-- Search samba accounts by filtering on uid equal to userid, not princname
-
-* Wed Apr 28 2010 Guillaume Rousse <guillomovitch@mandriva.org> 1.3.2-2mdv2010.1
-+ Revision: 540281
-- fix build with openssl 1.0
-- add telnet-server and telnet-client virtual packages
-- conflict with other telnet packages
-
-* Fri Mar 26 2010 Guillaume Rousse <guillomovitch@mandriva.org> 1.3.2-1mdv2010.1
-+ Revision: 527600
-- new version
-
-* Sun Feb 14 2010 Buchan Milne <bgmilne@mandriva.org> 1.3.1-4mdv2010.1
-+ Revision: 505977
-- Use system libcom_err again (fixes conflict between -server libext2fs-devel)
-
-* Mon Feb 08 2010 Guillaume Rousse <guillomovitch@mandriva.org> 1.3.1-3mdv2010.1
-+ Revision: 502234
-- fix exported symbols list (should fix smbk5pwd overlay)
-- no need to prevent init script translation
-
-* Thu Dec 31 2009 Funda Wang <fwang@mandriva.org> 1.3.1-2mdv2010.1
-+ Revision: 484334
-- rebuild for db4.8
-
-* Mon Nov 23 2009 Guillaume Rousse <guillomovitch@mandriva.org> 1.3.1-1mdv2010.1
-+ Revision: 469224
-- update to new version 1.3.1
-
-* Thu Nov 19 2009 Zombie Ryushu <ryushu@mandriva.org> 1.3.0-1mdv2010.1
-+ Revision: 467455
-- Fix man pages
-- Fix files section
-- Fix files section
-- Upgrade to 1.3.0 stable from rc1
-- Upgrade to 1.3.0 stable from rc1
-
-* Tue Oct 13 2009 Guillaume Rousse <guillomovitch@mandriva.org> 1.3.0-0.rc1.1mdv2010.0
-+ Revision: 457005
-- new version
-
-* Tue Oct 06 2009 Guillaume Rousse <guillomovitch@mandriva.org> 1.3.0-0.pre10.1mdv2010.0
-+ Revision: 455249
-- new pre-release
-
-* Fri Aug 28 2009 Guillaume Rousse <guillomovitch@mandriva.org> 1.3.0-0.pre6.1mdv2010.0
-+ Revision: 421808
-- new version
-- drop unused sources
-- cleanup patch set
-
-* Wed Feb 25 2009 Guillaume Rousse <guillomovitch@mandriva.org> 1.2.1-2mdv2009.1
-+ Revision: 344919
-- rebuild against new readline
-- fix format errors
-
-* Sat Nov 08 2008 Guillaume Rousse <guillomovitch@mandriva.org> 1.2.1-1mdv2009.1
-+ Revision: 301107
-- update to new version 1.2.1
-
-* Mon Oct 27 2008 Guillaume Rousse <guillomovitch@mandriva.org> 1.2-6mdv2009.1
-+ Revision: 297548
-- fix perl scripts interpreter, and install password check plugin
-
-* Sun Oct 26 2008 Guillaume Rousse <guillomovitch@mandriva.org> 1.2-5mdv2009.1
-+ Revision: 297291
-- ship utility scripts in server package
-
-* Wed Oct 01 2008 Guillaume Rousse <guillomovitch@mandriva.org> 1.2-4mdv2009.0
-+ Revision: 290690
-- conflict with openafs has been fixed
-
-* Tue Jul 15 2008 Guillaume Rousse <guillomovitch@mandriva.org> 1.2-3mdv2009.0
-+ Revision: 235929
-- mark /etc/sysconfig/heimdal as configuration file
-
-* Tue Jul 15 2008 Guillaume Rousse <guillomovitch@mandriva.org> 1.2-2mdv2009.0
-+ Revision: 235889
-- fix default database location
-
-* Wed Jul 02 2008 Guillaume Rousse <guillomovitch@mandriva.org> 1.2-1mdv2009.0
-+ Revision: 230714
-- new version
-
-  + Buchan Milne <bgmilne@mandriva.org>
-    - New version 1.2
-      Address some overlinking/underlinking issues (not all fixed yet)
-      Build against system sqlite
-
-  + Pixel <pixel@mandriva.com>
-    - do not call ldconfig in %%post/%%postun, it is now handled by filetriggers
-    - normalize call to ldconfig in %%post/%%postun
-    - adapt to %%_localstatedir now being /var instead of /var/lib (#22312)
-
-* Mon Mar 10 2008 Guillaume Rousse <guillomovitch@mandriva.org> 1.1-4mdv2008.1
-+ Revision: 183582
-- move headers back to standard location
-  make devel package conflict with mit-kerberos devel package
-
-* Fri Mar 07 2008 Guillaume Rousse <guillomovitch@mandriva.org> 1.1-3mdv2008.1
-+ Revision: 181388
-- don't redefine rpm macros, it break readline detection
-- rediff readline test fix using automake source files
-- use PLD patch to avoid install libeditline, so as to fix conflict with readline
-
-* Mon Feb 18 2008 Thierry Vignaud <tv@mandriva.org> 1.1-2mdv2008.1
-+ Revision: 170887
-- rebuild
-- fix "foobar is blabla" summary (=> "blabla") so that it looks nice in rpmdrake
-- fix summary-not-capitalized
-
-* Fri Jan 25 2008 Guillaume Rousse <guillomovitch@mandriva.org> 1.1-1mdv2008.1
-+ Revision: 158141
-- new version
-  drop patch 8 and 9 (merged upstream)
-  drop additional sources
-  only use specific library directory for releases <= 2007.1
-
-  + Buchan Milne <bgmilne@mandriva.org>
-    - Improve descriptions
-    - Add chkconfig lines for distros that dont yet support LSB tags
-    - Remove attributions, as it no longer resembles the script attributed to.
-
-  + Olivier Blin <blino@mandriva.org>
-    - restore BuildRoot
-
-* Mon Dec 24 2007 Oden Eriksson <oeriksson@mandriva.com> 1.0.2-2mdv2008.1
-+ Revision: 137508
-- rebuilt against openldap-2.4.7 libs
-
-  + Thierry Vignaud <tv@mandriva.org>
-    - kill re-definition of %%buildroot on Pixel's request
-
-* Mon Dec 17 2007 Guillaume Rousse <guillomovitch@mandriva.org> 1.0.2-1mdv2008.1
-+ Revision: 121654
-- new version
-
-* Sun Dec 09 2007 Guillaume Rousse <guillomovitch@mandriva.org> 1.0.2-0.RC6.1mdv2008.1
-+ Revision: 116778
-- new version
-
-  + Thierry Vignaud <tv@mandriva.org>
-    - buildrequires X11-devel instead of XFree86-devel
-
-  + Buchan Milne <bgmilne@mandriva.org>
-    - Use --detach for ipropd-master by default
-    - Avoid conflict with krb5-devel, by:
-     - moving headers to %%_includedir/heimdal
-     - splitting of the devel docs
-     - renaming krb5-config to heimdal-config
-
-* Thu Sep 27 2007 Buchan Milne <bgmilne@mandriva.org> 1.0.1-4mdv2008.0
-+ Revision: 93260
-- Dont run tests by default
-- Buildrequire texinfo for docs
-- Conflict with libgssapi2 on 2008.0 to take care of upgrade case
-- Ship schema file (hdb.schema) for hdb_ldap
-- Start and stop all relevant daemons in init script (configurable)
-- Fix start/stop messages in init script (part of bug #32897)
-- Require krb5 on mdv2008.0 or later (part of bug #27273)
-- Fix location of configuration files (bug #32898)
-- Ship some files in svn but missing from tarball, among others to
-  - ship html docs
-  - ship files necessary for tests
-- Enable tests (except for check-ipropd which fails only under rpm)
-- Make backports work (by shipping libs in package-specific dir) on 2007.1 or older
-
-* Sun Sep 09 2007 Buchan Milne <bgmilne@mandriva.org> 1.0.1-3mdv2008.0
-+ Revision: 83707
-- Buildrequire e2fsprogs-devel (fixes #32110)
-
-  + Guillaume Rousse <guillomovitch@mandriva.org>
-    - adjust conflict on libxmlrpc-devel
-
-* Thu Aug 23 2007 Thierry Vignaud <tv@mandriva.org> 1.0.1-2mdv2008.0
-+ Revision: 70270
-- kill file require on chkconfig
-
-* Thu Aug 16 2007 Buchan Milne <bgmilne@mandriva.org> 1.0.1-1mdv2008.0
-+ Revision: 64524
-- New version 1.0.1
-- Fix daemons detaching from init script (#27274)
-- Add conflict with ftp-client-krb5 (#23757)
-- Add conflicts to heimdal-login (is probably totally uninstallable now) (#23759)
-- Add conflict with telnet-client-krb5 (#23763)
-- Drop ftpusers file conflicting with man-pages (#32181)
-- Buildrequire readline devel (fixes conflict with editline) (#25605)
-
-* Tue Jun 19 2007 Guillaume Rousse <guillomovitch@mandriva.org> 0.8.1-4mdv2008.0
-+ Revision: 41558
-- explicit conflicts from devel package with krb5-devel and gssapi-devel
-
-* Mon Jun 04 2007 Buchan Milne <bgmilne@mandriva.org> 0.8.1-3mdv2008.0
-+ Revision: 35100
-- BuildRequire openldap-devel so --with-openldap has a chance of working
-
-* Fri Apr 27 2007 Guillaume Rousse <guillomovitch@mandriva.org> 0.8.1-2mdv2008.0
-+ Revision: 18677
-- get rid of heimdal mk_cmds to fix ext2fs-devel conflict, and explicit conflict with xmlrpc-devel
-
-* Fri Apr 27 2007 Guillaume Rousse <guillomovitch@mandriva.org> 0.8.1-1mdv2008.0
-+ Revision: 18510
-- new version
-
-
-* Tue Mar 20 2007 Guillaume Rousse <guillomovitch@mandriva.org> 0.7.2-5mdv2007.1
-+ Revision: 147013
-- drop unapplied patches, bunzip remaining one
-- fix database location
-  use standard compilation flags, execepted fortify flags
-
-* Wed Mar 14 2007 Guillaume Rousse <guillomovitch@mandriva.org> 0.7.2-4mdv2007.1
-+ Revision: 143504
-- fix build dependencies
-- make sure the lib package doesn't conflict with its mit equivalent, while the workstation and the server one does
-- make workstation package provides kerberos-workstation
-- move data into more compliant %%{_localstatedir}/%%{name}
-- drop alternatives, use plain old conflicts with krb5 and openafs
-- rename base package into -workstation, as for the MIT implementation
-- minor spec cleanups
-- yet another polish description slaid
-- cleanup %%file sections
-- drop polish translations (if i was not so lazy, I'd move them to rpm-summary package)
-
-* Thu Feb 22 2007 Guillaume Rousse <guillomovitch@mandriva.org> 0.7.2-3mdv2007.1
-+ Revision: 124675
-- explicit conflict with MITH telnet and ftp server
-- fix alternative problem (fix #28856)
-
-  + Buchan Milne <bgmilne@mandriva.org>
-    - Import heimdal
-
-* Thu Aug 24 2006 Thierry Vignaud <tvignaud@mandriva.com> 0.7.2-2mdv2007.0
-- fix group
-
-* Thu Mar 23 2006 Buchan Milne <bgmilne@mandriva.org> 0.7.2-1mdk
-- New release 0.7.2
-- buildrequire bison
-
-* Thu Sep 22 2005 Buchan Milne <bgmilne@mandriva.org> 0.7.1-1mdk
-- finally finish the last bits of this initial package
-
-* Fri Nov 26 2004 Buchan Milne <bgmilne@linux-mandrake.com> 0.6.3-1mdk
-- 0.6.3
-
-* Tue Jul 27 2004 Buchan Milne <bgmilne@linux-mandrake.com> 0.6.2-1mdk
-- 0.6.2
-- drop db4 patchs (p3,p4) and compilation fixes (p5) - applied upstream
 
