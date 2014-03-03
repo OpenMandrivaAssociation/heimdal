@@ -132,7 +132,6 @@ This package contains Kerberos 5 programs for use on workstations.
 %{_mandir}/cat1/tenletxr.1*
 %{_mandir}/cat1/xnlock.1*
 %{_mandir}/man5/mech.5*
-%{_mandir}/cat5/mech.5*
 %{_mandir}/*8/verify_krb5_conf.8*
 %{_mandir}/man8/string2key.8*
 %{_mandir}/man8/kadmin.8*
@@ -567,6 +566,7 @@ rm -f %{buildroot}%{_libdir}/*.*a
 
 # looks like we don't need these
 rm -f %{buildroot}%{_mandir}/*5/qop.5*
+rm -f %{buildroot}%{_mandir}/cat5/mech.5
 
 %check
 %if %{?_with_test:1}%{!?_with_test:0}
