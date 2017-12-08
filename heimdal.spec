@@ -6,21 +6,17 @@
 
 Summary:	Heimdal implementation of Kerberos V5 system
 Name:		heimdal
-Version:	1.5.3
-Release:	2
+Version:	7.5.0
+Release:	1
 License:	BSD-like
 Group:		Networking/Other
 URL:		http://www.h5l.org
-Source0:	http://www.h5l.org/dist/src/heimdal-%{version}.tar.gz
-Source10:	http://www.h5l.org/dist/src/heimdal-%{version}.tar.gz.asc
+Source0:	https://github.com/heimdal/heimdal/releases/download/heimdal-%{version}/heimdal-%{version}.tar.gz
 Source1:	%{name}.init
 #FIXME
 #Source2:	%{name}.logrotate
 Source3:	%{name}.sysconfig
 #Source4:	%{name}-krb5.conf
-Source5:	%{name}-ftpd.xinetd
-Source6:	%{name}-rshd.xinetd
-Source7:	%{name}-telnetd.xinetd
 Source8:	%{name}-kadmind.xinetd
 Patch11:	heimdal-1.4-passwd-check.patch
 BuildRequires:	bison
@@ -30,7 +26,6 @@ BuildRequires:	db-devel
 BuildRequires:	openldap-devel >= 2.0
 BuildRequires:	pam-devel
 BuildRequires:	readline-devel
-BuildRequires:	termcap-devel
 BuildRequires:	pkgconfig(ncurses)
 BuildRequires:	pkgconfig(sqlite3)
 BuildRequires:	pkgconfig(x11)
@@ -46,8 +41,6 @@ Heimdal is a free implementation of Kerberos 5. The goals are to:
      conflict, with RFC 1510 (and any future updated RFC)
    - be reasonably compatible with the M.I.T Kerberos V5 API
    - have support for Kerberos V5 over GSS-API (RFC1964)
-   - include the most important and useful application programs (rsh,
-     telnet, popper, etc.)
    - include enough backwards compatibility with Kerberos V4
    - IPv6 support
 
@@ -65,33 +58,30 @@ This package contains Kerberos 5 programs for use on workstations.
 
 %files workstation
 %{_bindir}/afslog
-%{_bindir}/compile_et
 %{_bindir}/kgetcred
-%{_bindir}/kx
-%{_bindir}/pfrom
-%{_bindir}/rxtelnet
-%{_bindir}/rxterm
 %{_bindir}/string2key
-%{_bindir}/tenletxr
 %{_bindir}/otpprint
 %{_bindir}/verify_krb5_conf
-%{_bindir}/xnlock
 %{_bindir}/kf
 %{_bindir}/kdestroy
 %{_bindir}/kinit
 %{_bindir}/klist
 %{_bindir}/kpasswd
 %{_bindir}/gsstool
-%{_bindir}/kcc
 %{_bindir}/pagsh
 %{_bindir}/hxtool
 %{_bindir}/idn-lookup
 %{_bindir}/kswitch
+%{_bindir}/bsearch
+%{_bindir}/heimtools
+%{_bindir}/kadmin
+%{_bindir}/ktutil
+%{_sbindir}/heimdal/asn1_compile
+%{_sbindir}/heimdal/asn1_print
+%{_sbindir}/heimdal/slc
 %attr(4755,root,root) %{_bindir}/otp
 %attr(4755,root,root) %{_bindir}/su
 %attr(4755,root,root) %{_bindir}/ksu
-%{_sbindir}/kadmin
-%{_sbindir}/ktutil
 %{_sbindir}/digest-service
 %{_mandir}/man1/afslog.1*
 %{_mandir}/man1/ksu.1*
@@ -105,14 +95,15 @@ This package contains Kerberos 5 programs for use on workstations.
 %{_mandir}/man1/otp.1*
 %{_mandir}/man1/otpprint.1*
 %{_mandir}/man1/kf.1*
-%{_mandir}/man1/kx.1*
-%{_mandir}/man1/pfrom.1*
-%{_mandir}/man1/rxtelnet.1*
-%{_mandir}/man1/rxterm.1*
-%{_mandir}/man1/tenletxr.1*
-%{_mandir}/man1/xnlock.1*
 %{_mandir}/man5/krb5.conf.5.*
-%{_mandir}/man5/login.access.5.*
+%{_mandir}/man1/bsearch.1*
+%{_mandir}/man1/kadmin.1*
+%{_mandir}/man1/ktutil.1*
+%{_mandir}/man7/krb5-plugin.7*
+%{_mandir}/cat1/bsearch.1
+%{_mandir}/cat1/kadmin.1
+%{_mandir}/cat1/ktutil.1
+%{_mandir}/cat7/krb5-plugin.7
 %{_mandir}/cat1/kdestroy.1*
 %{_mandir}/cat1/kgetcred.1*
 %{_mandir}/cat1/klist.1*
@@ -125,20 +116,10 @@ This package contains Kerberos 5 programs for use on workstations.
 %{_mandir}/cat1/otp.1*
 %{_mandir}/cat1/otpprint.1*
 %{_mandir}/cat1/kf.1*
-%{_mandir}/cat1/kx.1*
-%{_mandir}/cat1/pfrom.1*
-%{_mandir}/cat1/rxtelnet.1*
-%{_mandir}/cat1/rxterm.1*
-%{_mandir}/cat1/tenletxr.1*
-%{_mandir}/cat1/xnlock.1*
 %{_mandir}/man5/mech.5*
 %{_mandir}/*8/verify_krb5_conf.8*
 %{_mandir}/man8/string2key.8*
-%{_mandir}/man8/kadmin.8*
-%{_mandir}/man8/ktutil.8*
 %{_mandir}/cat8/string2key.8*
-%{_mandir}/cat8/kadmin.8*
-%{_mandir}/cat8/ktutil.8*
 
 #----------------------------------------------------------------------------
 
@@ -172,7 +153,6 @@ This package contains the master KDC.
 %{_mandir}/man8/hpropd.8*
 %{_mandir}/man8/kadmind.8*
 %{_mandir}/man8/kdc.8*
-%{_mandir}/man8/kxd.8*
 %{_mandir}/man8/kfd.8*
 %{_mandir}/man8/kpasswdd.8*
 %{_mandir}/man8/kcm.8*
@@ -182,7 +162,6 @@ This package contains the master KDC.
 %{_mandir}/cat8/hpropd.8*
 %{_mandir}/cat8/kadmind.8*
 %{_mandir}/cat8/kdc.8*
-%{_mandir}/cat8/kxd.8*
 %{_mandir}/cat8/kfd.8*
 %{_mandir}/cat8/kpasswdd.8*
 %{_mandir}/cat8/kcm.8*
@@ -193,7 +172,6 @@ This package contains the master KDC.
 %{_sbindir}/ipropd-slave
 %{_sbindir}/kadmind
 %{_sbindir}/kdc
-%{_sbindir}/kxd
 %{_sbindir}/kfd
 %{_sbindir}/kpasswdd
 %{_sbindir}/iprop-log
@@ -254,170 +232,6 @@ packages.
 
 #----------------------------------------------------------------------------
 
-%package	login
-Summary:	Used when signing onto a system
-Group:		Networking/Other
-Requires:	%{name}-libs = %{EVRD}
-Provides:	login
-Conflicts:	util-linux shadow-utils
-
-%description	login
-login is used when signing onto a system. It can also be used to
-switch from one user to another at any time (most modern shells have
-support for this feature built into them, however). This package
-contain kerberized version login program.
-
-%files login
-%{_bindir}/login
-%{_mandir}/man1/login.1*
-%{_mandir}/cat1/login.1*
-
-#----------------------------------------------------------------------------
-
-%package	ftp
-Summary:	The standard UNIX FTP (file transfer protocol) client
-Group:		Networking/Other
-Requires:	%{name}-libs = %{EVRD}
-Conflicts:	ftp-client-krb5
-Provides:	ftp-client
-
-%description	ftp
-The ftp package provides the standard UNIX command-line FTP client
-with kerberos authentication support. FTP is the file transfer
-protocol, which is a widely used Internet protocol for transferring
-files and for archiving files.
-
-%files ftp
-%{_bindir}/ftp
-%{_mandir}/man1/ftp.1*
-%{_mandir}/cat1/ftp.1*
-
-#----------------------------------------------------------------------------
-
-%package	rsh
-Summary:	Clients for remote access commands (rsh, rlogin, rcp)
-Group:		Networking/Other
-Requires:	%{name}-libs = %{EVRD}
-Provides:	rsh-client
-
-%description	rsh
-The rsh package contains a set of programs which allow users to run
-commands on remote machines, login to other machines and copy files
-between machines (rsh, rlogin and rcp). All three of these commands
-use rhosts style authentication. This package contains the clients
-needed for all of these services.
-
-%files rsh
-%{_bindir}/rsh
-%{_bindir}/rcp
-%{_mandir}/man1/rsh.1*
-%{_mandir}/cat1/rsh.1*
-%{_mandir}/man1/rcp.1*
-%{_mandir}/cat1/rcp.1*
-
-#----------------------------------------------------------------------------
-
-%package	telnet
-Summary:	Client for the telnet remote login
-Group:		Networking/Other
-Requires:	%{name}-libs = %{EVRD}
-Conflicts:	krb5-appl-clients
-Conflicts:	netkit-telnet
-Provides:	telnet-client
-
-%description	telnet
-Telnet is a popular protocol for remote logins across the Internet.
-This package provides a command line telnet client.
-
-%files telnet
-%{_bindir}/telnet
-%{_mandir}/man1/telnet.1*
-%{_mandir}/cat1/telnet.1*
-
-#----------------------------------------------------------------------------
-
-%package	ftpd
-Summary:	The standard UNIX FTP (file transfer protocol) server
-Group:		System/Servers
-Requires(pre):	xinetd
-Requires:	%{name}-libs = %{EVRD}
-Conflicts:	ftp-server-krb5
-Provides:	ftp-server
-
-%description	ftpd
-FTP is the file transfer protocol, which is a widely used Internet
-protocol for transferring files and for archiving files.
-
-%files ftpd
-%config(noreplace) %{_sysconfdir}/xinetd.d/ftpd
-%{_sbindir}/ftpd
-%{_mandir}/man8/ftpd.8*
-%{_mandir}/cat8/ftpd.8*
-
-%post ftpd
-service xinetd condreload
-
-%postun ftpd
-service xinetd condreload
-
-#----------------------------------------------------------------------------
-
-%package	rshd
-Summary:	Server for remote access commands (rsh, rlogin, rcp)
-Group:		System/Servers
-Requires(pre):	xinetd
-Requires:	%{name}-libs = %{EVRD}
-Provides:	rsh-server
-
-%description	rshd
-The rsh package contains a set of programs which allow users to run
-commmands on remote machines, login to other machines and copy files
-between machines (rsh, rlogin and rcp). All three of these commands
-use rhosts style authentication. This package contains servers needed
-for all of these services.
-
-%files rshd
-%config(noreplace) %{_sysconfdir}/xinetd.d/rshd
-%{_sbindir}/rshd
-%{_mandir}/man8/rshd.8*
-%{_mandir}/cat8/rshd.8*
-
-%post rshd
-service xinetd condreload
-
-%postun rshd
-service xinetd condreload
-
-#----------------------------------------------------------------------------
-
-%package	telnetd
-Summary:	Server for the telnet remote login
-Group:		System/Servers
-Requires(pre):	xinetd
-Requires:	%{name}-libs = %{EVRD}
-Conflicts:	krb5-appl-servers
-Conflicts:	netkit-telnet-server
-Provides:	telnet-server
-
-%description	telnetd
-Telnet is a popular protocol for remote logins across the Internet.
-This package provides a telnet daemon which allows remote logins into
-the machine it is running on.
-
-%files telnetd
-%config(noreplace) %{_sysconfdir}/xinetd.d/telnetd
-%{_sbindir}/telnetd
-%{_mandir}/man8/telnetd.8*
-%{_mandir}/cat8/telnetd.8*
-
-%post telnetd
-service xinetd condreload
-
-%postun telnetd
-service xinetd condreload
-
-#----------------------------------------------------------------------------
-
 %if 0
 %package	clients
 Summary:	Kerberos programs for use on workstations
@@ -427,24 +241,6 @@ Requires:	%{name}-libs = %{EVRD}
 %description	clients
 Kerberos 5 Clients.
 %endif
-
-#----------------------------------------------------------------------------
-
-%package	daemons
-Summary:	Kerberos daemons programs for use on servers
-Group:		System/Servers
-Requires:	%{name}-libs = %{EVRD}
-
-%description	daemons
-Kerberos Daemons.
-
-%files daemons
-%{_sbindir}/popper
-%{_sbindir}/push
-%{_mandir}/man8/popper.8*
-%{_mandir}/man8/push.8*
-%{_mandir}/cat8/popper.8*
-%{_mandir}/cat8/push.8*
 
 #----------------------------------------------------------------------------
 
@@ -462,11 +258,18 @@ libraries.
 
 %files devel
 %{_bindir}/heimdal-config
-%{multiarch_bindir}/heimdal-config
 %{_libdir}/lib*.so
 %{_libdir}/windc.so
 %{_includedir}/*
 %{_libdir}/pkgconfig/heimdal-gssapi.pc
+%{_libdir}/pkgconfig/heimdal-kadm-client.pc
+%{_libdir}/pkgconfig/heimdal-kadm-server.pc
+%{_libdir}/pkgconfig/heimdal-krb5.pc
+%{_libdir}/pkgconfig/kadm-client.pc
+%{_libdir}/pkgconfig/kadm-server.pc
+%{_libdir}/pkgconfig/kafs.pc
+%{_libdir}/pkgconfig/krb5-gssapi.pc
+%{_libdir}/pkgconfig/krb5.pc
 
 #----------------------------------------------------------------------------
 
@@ -528,9 +331,6 @@ install -m644 %{SOURCE3} -D %{buildroot}%{_sysconfdir}/sysconfig/%{name}
 # FIXME install %{SOURCE2} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
 # FIXME install %{SOURCE3} %{buildroot}%{_sysconfdir}/sysconfig/%{name}
 
-install -m644 %{SOURCE5} -D %{buildroot}%{_sysconfdir}/xinetd.d/ftpd
-install -m644 %{SOURCE6} -D %{buildroot}%{_sysconfdir}/xinetd.d/rshd
-install -m644 %{SOURCE7} -D %{buildroot}%{_sysconfdir}/xinetd.d/telnetd
 install -m644 %{SOURCE8} -D %{buildroot}%{_sysconfdir}/xinetd.d/kadmind
 
 chmod +r %{buildroot}%{_bindir}/otp   # qrde dlaczego to ma chmod 0
@@ -550,16 +350,12 @@ rm -f %{buildroot}%{_bindir}/mk_cmds
 
 # see if we can avoid conflicting with krb5-devel
 mv %{buildroot}%{_bindir}/krb5-config %{buildroot}%{_bindir}/heimdal-config
-%multiarch_binaries %{buildroot}%{_bindir}/heimdal-config
 
 # utils
 install -m755 tools/kdc-log-analyze.pl -D %{buildroot}%{_datadir}/%{name}/kdc-log-analyze.pl
 install -m755 lib/kadm5/check-cracklib.pl -D %{buildroot}%{_datadir}/%{name}/check-cracklib.pl
 perl -pi -e 's|^#! ?/usr/pkg/bin/perl|#!%{_bindir}/perl|' \
     %{buildroot}%{_datadir}/%{name}/*.pl
-
-# stuff installed there because of libexecdir redefinition
-mv %{buildroot}%{_sbindir}/%{name} %{buildroot}%{_libdir}
 
 # cleanups
 rm -f %{buildroot}%{_libdir}/*.*a
