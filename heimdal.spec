@@ -7,7 +7,7 @@
 Summary:	Heimdal implementation of Kerberos V5 system
 Name:		heimdal
 Version:	7.5.0
-Release:	1
+Release:	2
 License:	BSD-like
 Group:		Networking/Other
 URL:		http://www.h5l.org
@@ -251,6 +251,7 @@ Requires:	%{name}-libs = %{EVRD}
 Conflicts:	libxmlrpc-devel
 Conflicts:	krb5-devel
 Conflicts:	ext2fs-devel
+Conflicts:	pkgconfig(com_err)
 
 %description	devel
 Contains files needed to compile and link software using the kerberos
