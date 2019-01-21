@@ -19,6 +19,7 @@ Source3:	%{name}.sysconfig
 #Source4:	%{name}-krb5.conf
 Source8:	%{name}-kadmind.xinetd
 Patch11:	heimdal-1.4-passwd-check.patch
+Patch12:	fix-missing-headers
 BuildRequires:	bison
 BuildRequires:	flex
 BuildRequires:	texinfo
@@ -293,6 +294,7 @@ Contains the documentation covering functions etc. in the heimdal libraries
 %prep
 %setup -q
 %patch11 -p1 -b .passwd_check
+%patch12 -p1
 
 %build
 %serverbuild
