@@ -1,21 +1,2 @@
-# Set to no to not start the kdc
-#START_KDC=yes
-#KDC_ARGS="--detach"
-
-# Set to yes to have ipropd-master started
-#START_MASTER=no
-#MASTER_ARGS="--detach"
-
-# Set to yes to start ipropd-slave, set MASTER to hostname of the ipropd-master
-#START_SLAVE=no
-#SLAVE_ARGS="--detach"
+# hostname of the iprop master
 #MASTER=""
-
-# Set to yes to start the admin server
-#START_KADMIND=no
-#KADMIND_ARGS=""
-
-# Set to yes to start the password changing server
-#START_KPASSWD=no
-#KPASSWD_ARGS=""
-
