@@ -3,7 +3,7 @@
 
 Name:       heimdal
 Version:    7.7.0
-Release:    1
+Release:    2
 Summary:    Heimdal implementation of Kerberos V5 system
 License:    BSD-like
 Group:      Networking/Other
@@ -152,7 +152,7 @@ scheme for openldap
 %if 0
     --enable-hdb-openldap-module
 %endif
-make
+%make_build -j1
 
 %install
 install -d %{buildroot}%{_localstatedir}/lib/%{name}
