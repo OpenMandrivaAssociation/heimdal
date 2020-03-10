@@ -168,7 +168,9 @@ sed -i -e 's,DB6,DB18_1_32,g' lib/hdb/db3.c
 	--enable-kcm \
 	--enable-pk-init \
 	--enable-hdb-openldap-module
-%make_build
+
+# Makefiles aren't ready for -j32, but -j2 or -j4 might work
+%make_build -j1
 
 %install
 install -d %{buildroot}%{_localstatedir}/lib/%{name}
