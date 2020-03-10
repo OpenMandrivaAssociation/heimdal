@@ -1,9 +1,10 @@
 %define _disable_ld_no_undefined 1
 %global __requires_exclude perl\\(Crypt::Cracklib\\)
+%global __provides_exclude pkgconfig\\(krb5-gssapi\\)|pkgconfig\\(krb5\\)
 
 Name:       heimdal
 Version:    7.7.0
-Release:    3
+Release:    4
 Summary:    Heimdal implementation of Kerberos V5 system
 License:    BSD-like
 Group:      Networking/Other
