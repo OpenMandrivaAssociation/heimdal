@@ -3,7 +3,7 @@
 
 Name:       heimdal
 Version:    7.7.0
-Release:    2
+Release:    3
 Summary:    Heimdal implementation of Kerberos V5 system
 License:    BSD-like
 Group:      Networking/Other
@@ -21,7 +21,7 @@ Source31:   %{name}-ipropd-slave-wrapper
 
 Patch0:		fix-missing-headers
 
-BuildRequires:  db-devel >= 4.2.52
+BuildRequires:  db18-devel >= 4.2.52
 BuildRequires:  flex
 BuildRequires:  bison
 BuildRequires:  libtool
@@ -35,6 +35,7 @@ BuildRequires:  pkgconfig(sqlite3)
 BuildRequires:  pkgconfig(x11)
 BuildRequires:	pkgconfig(xau)
 BuildRequires:	pkgconfig(xt)
+BuildRequires:	pkgconfig(libedit)
 #Required for tests/ldap
 BuildRequires:  openldap-servers
 
@@ -70,8 +71,6 @@ Conflicts:  krb5-server
 This package contains the master KDC.
 #----------------------------------------------------------------------------
 
-# Not working right yet
-%if 0
 %package hdb_ldap
 Summary:    Kerberos Server LDAP Backend
 Group:      System/Servers
@@ -80,7 +79,7 @@ Requires:   %{name}-server = %{version}-%{release}
 %description hdb_ldap
 This package contains the LDAP HDB backend plugin, which allows the use of
 an LDAP server for storing the Heimdal database.
-%endif
+
 #----------------------------------------------------------------------------
 
 %package libs
@@ -133,26 +132,43 @@ scheme for openldap
 %prep
 %autosetup -p1
 
+# Make absolutely sure we don't end up using broken
+# bundled libraries
+rm -rf lib/sqlite/*.{c,h}
+
+# Find db18 instead of obsolete db6
+sed -i -e 's,db6,db18.1.32,g' cf/db.m4 lib/hdb/db3.c
+sed -i -e 's,DB6,DB18_1_32,g' lib/hdb/db3.c
+
 %build
 %serverbuild
 %configure \
-    --with-hdbdir=%{_localstatedir}/lib/%{name} \
-    --disable-static \
-    --enable-shared \
-    --with-readline \
-    --with-readline-lib=%{_libdir} \
-    --with-readline-include=%{_includedir}/readline \
-    --with-openldap=%{_prefix} \
-    --with-sqlite3=%{_prefix} \
-    --with-libintl=%{_prefix} \
-    --without-x \
-    --with-ipv6 \
-    --enable-kcm \
-    --enable-pk-init
-%if 0
-    --enable-hdb-openldap-module
-%endif
-%make_build -j1
+	--with-hdbdir=%{_localstatedir}/lib/%{name} \
+	--disable-static \
+	--enable-shared \
+	--with-readline \
+	--with-readline-lib=%{_libdir} \
+	--with-readline-include=%{_includedir}/readline \
+	--with-openldap \
+	--with-openldap-lib=%{_libdir} \
+	--with-openldap-include=%{_includedir} \
+	--with-sqlite3 \
+	--with-sqlite3-lib=%{_libdir} \
+	--with-sqlite3-include=%{_includedir} \
+	--with-libintl \
+	--with-libintl-lib=%{_libdir} \
+	--with-libintl-include=%{_includedir} \
+	--with-readline-lib=%{_libdir} \
+	--with-readline-include=%{_includedir}/readline \
+	--with-libedit \
+	--with-libedit-lib=%{_libdir} \
+	--with-libedit-include=%{_includedir}/editline \
+	--without-x \
+	--with-ipv6 \
+	--enable-kcm \
+	--enable-pk-init \
+	--enable-hdb-openldap-module
+%make_build
 
 %install
 install -d %{buildroot}%{_localstatedir}/lib/%{name}
@@ -262,10 +278,8 @@ make -C tests check
 %{_datadir}/%{name}
 %doc doc/*.html
 
-%if 0
 %files hdb_ldap
 %{_libdir}/hdb_ldap*
-%endif
 
 %files libs
 %attr(400,root,root) %ghost %{_sysconfdir}/krb5.keytab
