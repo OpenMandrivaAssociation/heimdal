@@ -36,6 +36,7 @@ BuildRequires:  pkgconfig(x11)
 BuildRequires:	pkgconfig(xau)
 BuildRequires:	pkgconfig(xt)
 BuildRequires:	pkgconfig(libedit)
+BuildRequires:	perl(JSON)
 #Required for tests/ldap
 BuildRequires:  openldap-servers
 
@@ -169,8 +170,7 @@ sed -i -e 's,DB6,DB18_1_32,g' lib/hdb/db3.c
 	--enable-pk-init \
 	--enable-hdb-openldap-module
 
-# Makefiles aren't ready for -j32, but -j2 or -j4 might work
-%make_build -j1
+%make_build
 
 %install
 install -d %{buildroot}%{_localstatedir}/lib/%{name}
