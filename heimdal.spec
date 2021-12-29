@@ -21,6 +21,7 @@ Source30:   %{name}-kpasswdd.service
 Source31:   %{name}-ipropd-slave-wrapper
 
 Patch0:		fix-missing-headers
+Patch1:		02-autoconf-2.70-configure.patch
 
 BuildRequires:  db18-devel >= 4.2.52
 BuildRequires:  flex
@@ -138,11 +139,17 @@ scheme for openldap
 # bundled libraries
 rm -rf lib/sqlite/*.{c,h}
 
+ 
+
 # Find db18 instead of obsolete db6
 sed -i -e 's,db6,db18.1.32,g' cf/db.m4 lib/hdb/db3.c
 sed -i -e 's,DB6,DB18_1_32,g' lib/hdb/db3.c
+#Rebuild configure after patching macros
+
+autoreconf
 
 %build
+
 %serverbuild
 %configure \
 	--with-hdbdir=%{_localstatedir}/lib/%{name} \
