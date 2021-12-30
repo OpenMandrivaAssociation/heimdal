@@ -4,7 +4,7 @@
 
 Name:       heimdal
 Version:    7.7.0
-Release:    4
+Release:    5
 Summary:    Heimdal implementation of Kerberos V5 system
 License:    BSD-like
 Group:      Networking/Other
