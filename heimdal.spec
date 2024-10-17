@@ -8,7 +8,7 @@ Release:    7
 Summary:    Heimdal implementation of Kerberos V5 system
 License:    BSD-like
 Group:      Networking/Other
-URL:        http://www.h5l.org
+URL:        https://www.h5l.org
 Source0:    http://www.h5l.org/dist/src/heimdal-%{version}.tar.gz
 Source1:    http://www.h5l.org/dist/src/heimdal-%{version}.tar.gz.asc
 Source3:    %{name}.sysconfig
